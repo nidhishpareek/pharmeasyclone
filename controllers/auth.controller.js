@@ -1,59 +1,70 @@
 const { User } = require("../models/user.model");
 const jwt = require("jsonwebtoken");
-const newToken = (user) => {
-  return jwt.sign({ user }, process.env.JWT_SECRET_KEY);
-};
+const newJWTToken = (user) => {
+  const { name, gender, email, username } = user;
+  return jwt.sign(
+    { name, gender, email, username },
+    process.env.JWT_SECRET_KEY
+  );
+}; 
 
-const register = async (req, res) => {
+const signup = async (req, res) => {
   try {
-    let user = await User.findOne({ email: req.body.email });
-
+    let newUser = req.body;
+    let user = await User.findOne({ email: newUser.email });
     if (user) {
-      // console.log(user);
-      return res.status(400).send({ message: "User Already Exists" });
+      return res
+        .status(400)
+        .send({ message: "User already exists with this Email." });
     } else {
-      user = await User.create(req.body);
-      return res.status(201).send({ message: "User Created" });
+      user = await User.create(newUser);
+
+      const token = newJWTToken(user);
+      return res
+        .status(201)
+        .send({ message: "User Created Successfully", token });
     }
   } catch (error) {
     res.status(500).send(error.message);
   }
 };
+
 const login = async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
+    let loginUser = req.body;
+
+    const user = await User.findOne({ email: loginUser.email });
 
     if (!user) return res.status(404).send({ message: "Invalid Credentials" });
 
-    const match = user.checkPassword(req.body.password);
+    const match = user.checkPassword(loginUser.password);
     if (!match) return res.status(404).send({ message: "Invalid Credentials" });
-    const token = newToken(user);
-    return res.status(200).send({ message: "User Logged In", token: token });
+    delete user.password;
+    const token = newJWTToken(user);
+    return res.status(200).send({ message: "User Logged In", token });
   } catch (error) {
     res.status(500).send(error.message);
   }
 };
-const getLoggedInUser =  (req, res) => {
-  
-    const { user } = req;
-    console.log(user);
+const getLoggedInUser = (req, res) => {
+  const { user } = req;
+  console.log(user);
 
-    if (user) {
-      return res.send({
-        status: "Success",
-        data: user,
-      });
-    } else {
-      return res.status(400).send({
-        status: "Error",
-        message: "User Not Logged Inn ",
-      });
-    }
-  
+  if (user) {
+    return res.send({
+      status: "Success",
+      data: user,
+    });
+  } else {
+    return res.status(400).send({
+      status: "Error",
+      message: "User Not Logged Inn ",
+    });
+  }
 };
 
 module.exports = {
-  register,
+  signup,
   login,
   getLoggedInUser,
 };
