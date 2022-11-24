@@ -119,3 +119,16 @@ order =>
 PS- payment gateway = stripe.
 TODOs=>
 post in cart when user just login (contains key loginpage true),
+
+
+
+categories => 
+    Baby Care 
+    Cleansers
+    Diabetic Care 
+    Dressing
+    Maternity Care
+    Homeopathy
+    Massage Tools
+    Vitamins And Supplements
+    Hair 
