@@ -5,12 +5,12 @@ const { Product} = require("../models/product.models");
 async function getCategories(req,res){
     try {
 
-        let totalCategories = await Product.distinct("sub_category")
+        let totalCategories = await Product.distinct("category")
 
-        totalCategories = totalCategories.filter(el=>{
-            return (el==="Baby Care" || el==="Cleansers" || el==="Diabetic Care" || el==="Dressing" ||
-            el==="Massage Tools" || el==="Homeopathy" || el==="Vitamins And Supplements" || el==="Maternity Care" || el==='Hair Styling Tools') ;
-        })
+        // totalCategories = totalCategories.filter(el=>{
+        //     return (el==="Baby Care" || el==="Cleansers" || el==="Diabetic Care" || el==="Dressing" ||
+        //     el==="Massage Tools" || el==="Homeopathy" || el==="Vitamins And Supplements" || el==="Maternity Care" || el==='Hair Styling Tools') ;
+        // })
          res.send({totalCategories})
         
     } catch (error) {
@@ -23,25 +23,29 @@ async function getAllProductsByCategory(req, res) {
     try {
         let {category} = req.params;
         let {
-            brand = '',
+            sub_category = '',
             search = '',
             pageSize = 20, 
             page = 1,
             sortBy = '_id',
             sortOrder = '' 
         } = req.query;
+        const filters = {
+            category:category,
+        }
+        if(sub_category.length >= 1){
+            filters.sub_category = sub_category
+        }
     
-        const totalProducts = await Product.find({
-            sub_category:category,
-        }).count();
+        const totalProducts = await Product.find(filters).count();
+        
         if(totalProducts === 0) {
            return  res.status(404).send({message:"Page not found"}) 
         }
+        let totalCategories = await Product.find({category:category,}).distinct("sub_category")
+        let totalBrands = await Product.find({category:category,}).distinct("manufacturer")
         
-    
-        const products = await Product.find({
-            sub_category:category,
-        })
+        const products = await Product.find(filters)
         .sort({
             [sortBy]: sortOrder === 'asc' ? 1 : -1
         })
@@ -52,7 +56,9 @@ async function getAllProductsByCategory(req, res) {
                 totalProducts,
                 products,
                 page,
-                pageSize    
+                pageSize,
+                totalCategories ,
+                totalBrands   
         })
     } catch(err) {
         return res.status(500).send({
