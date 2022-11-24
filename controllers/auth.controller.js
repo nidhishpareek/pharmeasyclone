@@ -46,7 +46,7 @@ const login = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
-const getLoggedInUser = (req, res) => {
+const checkLoggedIn = (req, res) => {
   const { user } = req;
   console.log(user);
 
@@ -58,7 +58,7 @@ const getLoggedInUser = (req, res) => {
   } else {
     return res.status(400).send({
       status: "Error",
-      message: "User Not Logged Inn ",
+      message: "User Not Logged In",
     });
   }
 };
@@ -66,5 +66,5 @@ const getLoggedInUser = (req, res) => {
 module.exports = {
   signup,
   login,
-  getLoggedInUser,
+  checkLoggedIn,
 };

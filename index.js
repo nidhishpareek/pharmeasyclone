@@ -2,13 +2,13 @@ const cors = require('cors');
 const express = require('express');
 const mongoose = require('mongoose');
 const { connectDatabase } = require('./Database/dbConnect.js');
-// const { Cart } = require('./models/cart.model.js');
 // const { Product } = require('./models/product.models.js');
-const { User } = require('./models/user.model.js');
+// const { User } = require('./models/user.model.js');
+const {userRouter}= require('./routes/user.router.js');
+// const { Cart } = require('./models/cart.model.js');
 // const { cartRouter } = require('./routes/cart.router');
 // const { orderRouter } = require('./routes/order.router');
 // const { productsRouter } = require('./routes/products.router');
-const { userRouter } = require('./routes/user.router.js');
 
 const app = express();
 app.use(express.json());
