@@ -26,6 +26,8 @@ async function getAllProductsByCategory(req, res) {
             brand = '',
             search = '',
             pageSize = 20, 
+
+            
             page = 1,
             sortBy = '_id',
             sortOrder = '' 
