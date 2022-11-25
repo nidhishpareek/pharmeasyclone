@@ -3,9 +3,9 @@ const { User } = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcryptjs');
 const JWT_SECRET = process.env.JWT_SECRET;
-
 // const firebase = require("firebase");
-
+// firebase.auth().useDeviceLanguage();
+// 
 // const getOtp = ()=>{
 
 // }
@@ -15,7 +15,7 @@ const newJWTToken = (user) => {
   console.log(JWT_SECRET)
   return jwt.sign(
     { name, gender, email, username },
-    JWT_SECRET
+    '602bf9c1352835aac421b0'
   );
 }; 
 
