@@ -1,12 +1,26 @@
+require('dotenv').config()
 const { User } = require("../models/user.model");
 const jwt = require("jsonwebtoken");
+const bcrypt = require('bcryptjs');
+const JWT_SECRET = process.env.JWT_SECRET;
+
+// const firebase = require("firebase");
+
+// const getOtp = ()=>{
+
+// }
+
 const newJWTToken = (user) => {
   const { name, gender, email, username } = user;
+  console.log(JWT_SECRET)
   return jwt.sign(
     { name, gender, email, username },
-    process.env.JWT_SECRET_KEY
+    JWT_SECRET
   );
 }; 
+
+
+
 
 const signup = async (req, res) => {
   try {
