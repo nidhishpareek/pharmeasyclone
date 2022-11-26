@@ -53,28 +53,16 @@ const login = async (req, res) => {
 
     const match = user.checkPassword(loginUser.password);
     if (!match) return res.status(404).send({ message: "Invalid Credentials" });
-<<<<<<< HEAD
-    const token = newToken(user);
-    return res.status(200).send({ message: "Login Successful", token: token });
-=======
     delete user.password;
     const token = newJWTToken(user);
     return res.status(200).send({ message: "User Logged In", token });
->>>>>>> 1c442bc2aa58b6ac6ac3df113f9798110d042d36
   } catch (error) {
     res.status(500).send(error.message);
   }
 };
-<<<<<<< HEAD
-const getLoggedInUser =  (req, res) => {
-  
-    const { user } = req;
-    // console.log(user);
-=======
 const checkLoggedIn = (req, res) => {
   const { user } = req;
   console.log(user);
->>>>>>> 1c442bc2aa58b6ac6ac3df113f9798110d042d36
 
   if (user) {
     return res.send({

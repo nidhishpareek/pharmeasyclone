@@ -38,10 +38,6 @@ getCart();
 
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 1c442bc2aa58b6ac6ac3df113f9798110d042d36
 connectDatabase().then(()=>{
     app.listen(PORT,()=>{
         console.log(`listening on ${PORT}`);
