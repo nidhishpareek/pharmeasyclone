@@ -28,7 +28,7 @@ export const QuickRegister = () => {
     // console.log(user);
     const handleReg = async(e)=>{
         e.preventDefault();
-        signupApi(user.email,user.name,user.password).then(res=>console.log(res)).catch(err=>console.log(err))
+       await signupApi(user.email,user.name,user.password).then(res=>console.log(res)).catch(err=>console.log(err))
         // console.log(res2);
        
     //     try {

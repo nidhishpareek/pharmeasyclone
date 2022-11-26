@@ -37,7 +37,7 @@ export function LoginIndividualSlider() {
     const handleLogin = async(e) =>{
       e.preventDefault();
 
-      await loginApi(user.email,user.password).then(res=>console.log(res))
+      await loginApi(user.email,user.password).then(res=>localStorage.setItem('token',res.data.token))
         // let res = await fetch(`https://pharmeasy-server1234.herokuapp.com/Users`);
         // let res2 = await res.json();
         // console.log(res2);
@@ -51,7 +51,7 @@ export function LoginIndividualSlider() {
 
         // try {
         //   if(flag){
-        //     dispatch(getSuccess(true));
+        //     
         //     localStorage.setItem("isAuth", true);
         //     toast({
         //       title: 'User Logged in Successfully',
