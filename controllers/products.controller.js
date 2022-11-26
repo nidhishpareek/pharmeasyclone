@@ -18,17 +18,16 @@ async function getAllProductsByCategory(req, res) {
   try {
     let { category } = req.params;
     let {
-      search = "",
-      brand = "",
+      brand ,
       pageSize = 20,
       page = 1,
       sortBy = "_id",
       sortOrder = "",
     } = req.query;
     const filters = {
-      category: category,
+      category,
     };
-    if(brand.length > 0){
+    if(brand ){
       filters.manufacturer = brand;
     }
 
