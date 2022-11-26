@@ -77,6 +77,10 @@ async function updateCartItem(req,res){
     if (!user) {
       return res.status(401).send({ message: "Not logged in" });
     }
+    const product  = await  Cart.findOne({userId:user._id,"cartItems.productId":req.body.productId})
+    if(!product){
+      return res.status(404).send({message:'product not found'})
+    }
     const cart = await Cart.updateOne({userId:user._id,"cartItems.productId":req.body.productId},{
         $set:{"cartItems.$.quantity":req.body.quantity}
     })

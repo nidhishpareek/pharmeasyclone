@@ -1,5 +1,8 @@
 const { Product } = require("../models/product.models");
 
+
+
+
 async function getCategories(req, res) {
   try {
     let totalCategories = await Product.distinct("category");
@@ -12,6 +15,28 @@ async function getCategories(req, res) {
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
+}
+async function getProductById(req, res) {
+  try {
+    const { id } = req.params;
+
+    const product = await Product.find({
+    _id: id,
+  });
+  
+    
+
+  
+
+  return res.send({
+    product,
+  });
+    
+  } catch (error) {
+    return res.status(404).send({message:"Invalid Route"})
+    
+  }
+  
 }
 
 async function getAllProductsByCategory(req, res) {
@@ -118,17 +143,7 @@ async function getAllProductsBySubCategory(req, res) {
     }
   }
 
-async function getProductById(req, res) {
-  const { id } = req.params;
 
-  const product = await Product.find({
-    _id: id,
-  });
-
-  return res.send({
-    product,
-  });
-}
 
 module.exports = {
   getAllProductsByCategory,
