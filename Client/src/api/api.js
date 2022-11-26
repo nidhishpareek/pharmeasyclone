@@ -23,3 +23,11 @@ export async function getUserApi() {
 export async function getAllCategories(){
     return axios.get(`http://localhost:8080/products`)
 }
+
+export async function getAllProductsByCategory(category,page){
+    return axios.get(`http://localhost:8080/products/category/${category}?page=${page}`)
+}
+export async function getSingleProduct(id){
+    return axios.get(`http://localhost:8080/products/${id}`)
+
+}

@@ -16,12 +16,13 @@ function ProductsGrid({data,loading}) {
       {loading === false && data.map((el) => (
         <ProductCard
           image={el.img1}
-          title={el.desc}
-          newPrice={el.newPrice}
-          originalPrice={el.originalPrice}
-          offer={el.offer}
-          id={el.id}
-          key={el.id}
+          title={el.title}
+          newPrice={el.actual_price}
+          originalPrice={el.crossed_price
+          }
+          offer={Math.ceil(((el.crossed_price - el.actual_price)/el.crossed_price)*100)}
+          id={el._id}
+          key={el._id}
 
         />
       ))}

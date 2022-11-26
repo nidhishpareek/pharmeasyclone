@@ -17,14 +17,14 @@ import {
   CheckboxGroup,
   Badge,
   Stack,
-  filter
+  filter,
 } from "@chakra-ui/react";
 import ProductsGrid from "../Components/Products/ProductsGrid";
 import ProductsBreadCrumb from "../Components/Products/ProductsBreadCrum";
 import Tabs from "../Components/Navbar/Tabs";
 
 import { CloseIcon } from "@chakra-ui/icons";
-
+import { getAllProductsByCategory } from "../api/api";
 
 function Products() {
   const getCurrPage = (value) => {
@@ -40,89 +40,65 @@ function Products() {
     return value;
   };
   const [totalPages, setTotalPages] = useState();
-  const arr =[];
+  const arr = [];
   const [loading, setLoading] = useState(false);
   const { cat } = useParams();
   const newCat = cat.split("-");
   const catSplit = newCat.join(" ");
   const [products, setProducts] = useState([]);
+  const [subCat,setSubCat] = useState([]);
   const [search, setSearch] = useSearchParams();
   const [orderBy, setOrderBy] = useState(search.get("orderBy") || "");
- 
+
   const [page, setPage] = useState(getCurrPage(search.get("page")) || 1);
-  
+
   const [filterArr, setFilterArr] = useState(search.getAll("brand") || []);
 
-  const [filters, setFilters] = useState([
-    {
-      id: 1,
-      checked: filterArr.includes("Dettol"),
-      label: "Dettol",
-    },
-    {
-      id: 2,
-      checked: filterArr.includes("Savlon") ,
-      label: "Savlon",
-    },
-    {
-      id: 3,
-      checked: filterArr.includes("PharmEasy") ,
-      label: "PharmEasy",
-    },
-    {
-      id: 4,
-      checked: filterArr.includes("Revital"), 
-      label: "Revital",
-    },
-    {
-      id: 5,
-      checked: filterArr.includes("EverHerb") ,
-      label: "EverHerb",
-    },
-  ]);
-// console.log(filters);
+  const [filters, setFilters] = useState([]);
+  // console.log(filters);
   // console.log(filterArr);
   // console.log(search);
   let p1 = `&_sort=newPrice&_order=${orderBy}`;
-  if(orderBy==="offer"){
-    p1 = `&_sort=offer&_order=desc` 
+  if (orderBy === "offer") {
+    p1 = `&_sort=offer&_order=desc`;
   }
 
- 
-function handleCheckedState(id){
-  
-     setFilters((filter)=>([...filters.map(el=>(el.id === id ? {...el,checked:!el.checked}:el))]))
-     console.log(filters);
-     
-    
-     
-    
-     
-}
+  function handleCheckedState(id) {
+    setFilters((filter) => [
+      ...filters.map((el) =>
+        el.id === id ? { ...el, checked: !el.checked } : el
+      ),
+    ]);
+    console.log(filters);
+  }
 
-  
-  
-  
   useEffect(() => {
-
-    
-    let p3 = [...filterArr.map(el=>(`&company=${el.toUpperCase()}`))]
+    // let p3 = [...filterArr.map(el=>(`&company=${el.toUpperCase()}`))]
     // console.log(p3.join(""))
     setLoading(true);
-    axios
-      .get(
-        `https://pharmeasy-server1234.herokuapp.com/Products?_page=${page}&_limit=9${orderBy && p1}${p3 ? p3.join("") : ""}`
-      )
-      .then((res) => {
-        // console.log(res);
-        setProducts(res.data);
-        setTotalPages(Math.ceil(res.headers["x-total-count"] / 9));
+    // axios
+    //   .get(
+    //     `https://pharmeasy-server1234.herokuapp.com/Products?_page=${page}&_limit=9${orderBy && p1}${p3 ? p3.join("") : ""}`
+    //   )
+    //   .then((res) => {
+    //     // console.log(res);
+    //     setProducts(res.data);
+    //     
+    //   })
+    //   .catch((err) => console.log(err))
+    //   .finally(() => {
+    //     setLoading(false);
+    //   });
+    getAllProductsByCategory(cat,page)
+      .then((res) =>{ 
+        setProducts(res.data.products)
+        setSubCat(res.data.subCategories)
+        setFilters(res.data.totalBrands);
+        setTotalPages(Math.ceil(res.data.totalProducts/res.data.pageSize));
       })
       .catch((err) => console.log(err))
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [page, orderBy,filterArr]);
+      .finally(() => setLoading(false));
+  }, [page, orderBy, filterArr]);
   if (page > totalPages) {
     setPage(totalPages);
   }
@@ -134,26 +110,24 @@ function handleCheckedState(id){
     if (orderBy) {
       paramObj.orderBy = orderBy;
     }
-   
-    if(filterArr){
-        paramObj.brand = filterArr 
-    } 
+
+    if (filterArr) {
+      paramObj.brand = filterArr;
+    }
     setSearch(paramObj);
-    
-  }, [page, orderBy, filters,filterArr]);
-  useEffect(()=>{
+  }, [page, orderBy, filterArr]);
+  useEffect(() => {
     const newArr = [];
-    filters.forEach(el=>{
-      if(el.checked){
+    filters.forEach((el) => {
+      if (el.checked) {
         newArr.push(el.label);
       }
-     }) 
-     setFilterArr(newArr)
-
-  },[filters])
+    });
+    setFilterArr(newArr);
+  }, []);
 
   for (let i = 0; i < totalPages; i++) arr[i] = i + 1;
-  
+
   return (
     <>
       <Tabs />
@@ -180,9 +154,7 @@ function handleCheckedState(id){
                   <Radio isChecked={true} colorScheme="teal"></Radio>
                 </HStack>
               </Box>
-              
 
-              
               {loading && (
                 <Stack>
                   <Skeleton mt={"20px"} mb={"20px"} height={"20px"} />
@@ -202,37 +174,18 @@ function handleCheckedState(id){
                   >
                     Sub Category
                   </Text>
-                  <RadioGroup   defaultValue="2">
-                    <HStack mb="26px" width={"100%"} justify="space-between">
+                  <RadioGroup >
+                    
+                    {subCat.map(el=><HStack mb="26px" width={"100%"} justify="space-between">
                       <Text fontSize={"14px"} fontWeight="400">
-                        Nutritional Drinks
+                        {el}
                       </Text>
-                      <Radio borderColor={"grey"}  value={"1"}  colorScheme="teal" ></Radio>
-                    </HStack>
-                    <HStack mb="26px" width={"100%"} justify="space-between">
-                      <Text fontSize={"14px"} fontWeight="400">
-                        Health Food
-                      </Text>
-                      <Radio borderColor={"grey"} value={"2"} colorScheme="teal"></Radio>
-                    </HStack>
-                    <HStack mb="26px" width={"100%"} justify="space-between">
-                      <Text fontSize={"14px"} fontWeight="400">
-                        Diabetic Care
-                      </Text>
-                      <Radio borderColor={"grey"} value={"3"} colorScheme="teal"></Radio>
-                    </HStack>
-                    <HStack mb="26px" width={"100%"} justify="space-between">
-                      <Text fontSize={"14px"} fontWeight="400">
-                        Beverages
-                      </Text>
-                      <Radio borderColor={"grey"} value={"4"} colorScheme="teal"></Radio>
-                    </HStack>
-                    <HStack mb="26px" width={"100%"} justify="space-between">
-                      <Text fontSize={"14px"} fontWeight="400">
-                        Weight Management
-                      </Text>
-                      <Radio borderColor={"grey"} value={"5"} colorScheme="teal"></Radio>
-                    </HStack>
+                      <Radio
+                        borderColor={"grey"}
+                        value={el}
+                        colorScheme="teal"
+                      ></Radio>
+                    </HStack>)}
                   </RadioGroup>
                 </Box>
               )}
@@ -257,28 +210,28 @@ function handleCheckedState(id){
                   >
                     Brand
                   </Text>
-                  
-                    <VStack spacing={"20px"} width={"100%"}>
-                      <CheckboxGroup defaultValue={filterArr}>
+
+                  <VStack spacing={"20px"} width={"100%"}>
+                    <CheckboxGroup defaultValue={filterArr}>
                       {filters.map((el) => (
-                        <HStack  key={el.id} width={"100%"} justify="space-between">
+                        <HStack
+                          key={el}
+                          width={"100%"}
+                          justify="space-between"
+                        >
                           <Text fontSize={"14px"} fontWeight="400">
-                            {el.label}
+                            {el}
                           </Text>
                           <Checkbox
-                        
-                          onChange={()=>handleCheckedState(el.id)}
+                            onChange={() => handleCheckedState(el.id)}
                             border={"grey"}
                             colorScheme="teal"
-                            value={el.label}
-                            
+                            value={el}
                           ></Checkbox>
                         </HStack>
                       ))}
-                      </CheckboxGroup>
-                    </VStack>
-                    
-                  
+                    </CheckboxGroup>
+                  </VStack>
                 </Box>
               )}
             </VStack>
@@ -304,7 +257,7 @@ function handleCheckedState(id){
                 <Text noOfLines={1}>Sort By:</Text>
                 <Box>
                   <Select
-                  colorScheme={"teal"}
+                    colorScheme={"teal"}
                     value={orderBy}
                     onChange={(e) => {
                       setOrderBy(e.target.value);
@@ -318,13 +271,32 @@ function handleCheckedState(id){
                 </Box>
               </HStack>
             </HStack>
-            {filterArr && <HStack mb="20px"><Text fontSize={"12px"} >Applied Filters :</Text>{
-              filters.map(e=>{
-                if(e.checked){
-                  return <Button key={e.id}  mr={"10px"}  size={"xs"} rightIcon={<CloseIcon onClick={(()=>handleCheckedState(e.id))} fontSize={"8px"}/>} variant={"outline"} colorScheme={"teal"}>{e.label}</Button>
-                }
-              })
-            }</HStack>}
+            {filterArr && (
+              <HStack mb="20px">
+                <Text fontSize={"12px"}>Applied Filters :</Text>
+                {filters.map((e) => {
+                  if (e.checked) {
+                    return (
+                      <Button
+                        key={e.id}
+                        mr={"10px"}
+                        size={"xs"}
+                        rightIcon={
+                          <CloseIcon
+                            onClick={() => handleCheckedState(e.id)}
+                            fontSize={"8px"}
+                          />
+                        }
+                        variant={"outline"}
+                        colorScheme={"teal"}
+                      >
+                        {e.label}
+                      </Button>
+                    );
+                  }
+                })}
+              </HStack>
+            )}
             <ProductsGrid data={products} loading={loading} />
             {loading && (
               <Skeleton>
@@ -351,7 +323,7 @@ function handleCheckedState(id){
               <HStack mt={"50px"} justify="center" spacing={"20px"}>
                 {arr.map((el) => (
                   <Button
-                  variant={"outline"}
+                    variant={"outline"}
                     colorScheme={"teal"}
                     onClick={() => setPage(el)}
                     disabled={page === el}
