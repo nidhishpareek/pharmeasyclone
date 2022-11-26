@@ -7,11 +7,14 @@ async function getCartItems(req, res) {
     if (!user) {
       return res.status(401).send({ message: "Not logged in" });
     }
-    const cart = await Cart.find({ userId: user._id });
+    // console.log(user._id);
+    const cart = await Cart.findOne({ userId: user._id }).populate({ path: 'userId', select: ['name','_id','email' ]}).populate({path: 'cartItems',
+    
+    populate: { path: 'productId' }});
     if (!cart) {
       return res.send({ message: "Empty Cart" });
     }
-    return res.send({ data: cart.cartItems });
+    return res.send({ data: cart });
   } catch (error) {
     return res.status(500).send({ message: error.message });
   }
@@ -24,25 +27,27 @@ async function addItemToCart(req, res) {
     if (!user) {
       return res.status(401).send({ message: "Not logged in" });
     }
-    const cart = await Cart.find({ userId: user._id });
+    let cart = await Cart.findOne({ userId: user._id });
     if (!cart) {
       cart = await Cart.create({
         userId: user._id,
         cartItems: [
           { productId: req.body.productId, quantity: req.body.quantity },
         ],
-      });
+      })
+    }else{
+        const cart = await Cart.findOneAndUpdate({userId:user._id}, {
+            $push: {
+              cartItems: {
+                productId: req.body.productId,
+                quantity: req.body.quantity,
+              },
+            },
+          })
     }
-    const resp = await Cart.findByIdAndUpdate(user._id, {
-      $push: {
-        cartItems: {
-          productId: req.body.productId,
-          quantity: req.body.quantity,
-        },
-      },
-    });
+    
 
-    return res.status(201).send({ message: "Item Added To Cart", data: resp });
+    return res.status(201).send({ message: "Item Added To Cart", data: cart });
   } catch (error) {
     return res.status(500).send({ message: error.message });
   }
@@ -55,15 +60,41 @@ async function removeItemFromCart(req, res) {
     if (!user) {
       return res.status(401).send({ message: "Not logged in" });
     }
-    const resp = await Cart.findByIdAndUpdate(user._id, {
-      $pullAll: { cartItems: [{ productId: req.body.productId }] },
+    const resp = await Cart.updateOne({userId:user._id}, {
+      $pull: { cartItems: { productId: req.body.productId } },
     });
-    return resp.send({message:"Delete Success",data: resp})
-  } catch (error) {}
+    
+    return res.send({message:"Item Deleted Successfully",data: resp})
+  } catch (error) {
+    return res.status(500).send({message:error.message})
+  }
 }
+async function updateCartItem(req,res){
+    try {
 
+        const { user } = req;
+
+    if (!user) {
+      return res.status(401).send({ message: "Not logged in" });
+    }
+    const cart = await Cart.updateOne({userId:user._id,"cartItems.productId":req.body.productId},{
+        $set:{"cartItems.$.quantity":req.body.quantity}
+    })
+
+
+
+    return res.send({message:'success',data:cart})
+
+
+        
+    } catch (error) {
+        return res.status(500).send({message:error.message})
+        
+    }
+}
 module.exports = {
   getCartItems,
   addItemToCart,
-  removeItemFromCart
+  removeItemFromCart,
+  updateCartItem
 };

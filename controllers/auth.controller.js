@@ -1,3 +1,4 @@
+require("dotenv").config();
 const { User } = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const newToken = (user) => {
@@ -28,7 +29,7 @@ const login = async (req, res) => {
     const match = user.checkPassword(req.body.password);
     if (!match) return res.status(404).send({ message: "Invalid Credentials" });
     const token = newToken(user);
-    return res.status(200).send({ message: "User Logged In", token: token });
+    return res.status(200).send({ message: "Login Successful", token: token });
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -36,7 +37,7 @@ const login = async (req, res) => {
 const getLoggedInUser =  (req, res) => {
   
     const { user } = req;
-    console.log(user);
+    // console.log(user);
 
     if (user) {
       return res.send({

@@ -1,11 +1,12 @@
 const express = require('express');
+const { getCartItems, addItemToCart, removeItemFromCart, updateCartItem } = require('../controllers/cart.controller');
 const cartRouter = express.Router();
 
 
-cartRouter.get('/',)
-cartRouter.post('/',)
-cartRouter.patch('/',)
-cartRouter.delete('/',)
+cartRouter.get('/',getCartItems)
+cartRouter.post('/',addItemToCart)
+cartRouter.patch('/',updateCartItem)
+cartRouter.delete('/',removeItemFromCart)
 
 
 
