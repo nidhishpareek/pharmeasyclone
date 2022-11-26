@@ -12,6 +12,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.1.2",
     "bootstrap": "^5.2.2",
+    "dotenv": "^16.0.3",
     "framer-motion": "^7.5.3",
     "react": "^18.2.0",
     "react-bootstrap": "^2.5.0",

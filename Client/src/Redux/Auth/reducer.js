@@ -2,7 +2,7 @@ import { ERROR, LOADING, SUCCESS } from "./action";
 const initState ={
     loading: false,
     error: false,
-    isAuth: localStorage.getItem("isAuth") || false,
+    user:null,
 
 }
 export const authReducer = (state=initState, {type, payload})=>{
@@ -12,7 +12,8 @@ export const authReducer = (state=initState, {type, payload})=>{
             return {
                 loading: true,
                 error: false,
-                isAuth: false,
+                user:null,
+                
             }
         }
         case SUCCESS: {
@@ -20,14 +21,14 @@ export const authReducer = (state=initState, {type, payload})=>{
             return {
                 loading: false,
                 error: false,
-                isAuth: payload,
+                user: payload,
             }
         }
         case ERROR: {
             return {
                 loading: false,
                 error: true,
-                isAuth: false,
+                user: null,
             }
         }
 

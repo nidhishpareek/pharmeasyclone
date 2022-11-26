@@ -20,11 +20,11 @@ function AllRoutes() {
   const dispatch = useDispatch();
   function getCart() {
     
-    axios.get("https://pharmeasy-server1234.herokuapp.com/Cart").then((res) => {
+    axios.get(`http://localhost:8080/cart`).then((res) => {
    
       dispatch(setCart(res.data));
     
-    })
+    }).catch(err=>console.log(err))
   }
   useEffect(()=>{
     getCart();

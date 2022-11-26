@@ -1,6 +1,7 @@
 import { Box, Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Flex, FormLabel, Image, Input, Stack, useDisclosure, InputGroup, InputRightElement, Text, useToast } from "@chakra-ui/react"
 import { useState, useRef } from 'react';
 import { useDispatch, useSelector } from "react-redux";
+import { loginApi } from "../../api/api";
 import { getSuccess } from '../../Redux/Auth/action';
 import { LogOut } from "./LogOut";
 import { QuickRegister } from "./QuickRegister";
@@ -12,7 +13,7 @@ const initState ={
 
 export function LoginIndividualSlider() {
 
-    const auth = localStorage.getItem("isAuth");
+    // const auth = localStorage.getItem("isAuth");
     
     const toast= useToast();
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -35,52 +36,54 @@ export function LoginIndividualSlider() {
   
     const handleLogin = async(e) =>{
       e.preventDefault();
-        let res = await fetch(`https://pharmeasy-server1234.herokuapp.com/Users`);
-        let res2 = await res.json();
+
+      await loginApi(user.email,user.password).then(res=>console.log(res))
+        // let res = await fetch(`https://pharmeasy-server1234.herokuapp.com/Users`);
+        // let res2 = await res.json();
         // console.log(res2);
 
-        let flag = false;
-        res2.map((elem) => {
-            if(elem.email  === user.email  && elem.password  === user.password){
-                flag = true;
-            }
-        })
+        // let flag = false;
+        // res2.map((elem) => {
+        //     if(elem.email  === user.email  && elem.password  === user.password){
+        //         flag = true;
+        //     }
+        // })
 
-        try {
-          if(flag){
-            dispatch(getSuccess(true));
-            localStorage.setItem("isAuth", true);
-            toast({
-              title: 'User Logged in Successfully',
-              status: 'success',
-              duration: 3000,
-              isClosable: true,
-              position: "top",
-            });
-          }
-          else{
-            toast({
-              title: 'Wrong Credentials! ',
-              status: 'error',
-              duration: 3000,
-              isClosable: true,
-              position: "top",
-            });
-          }
-        } 
-        catch (error) {
-            console.log(error);   
-        }
-        // console.log(isAuth);
+        // try {
+        //   if(flag){
+        //     dispatch(getSuccess(true));
+        //     localStorage.setItem("isAuth", true);
+        //     toast({
+        //       title: 'User Logged in Successfully',
+        //       status: 'success',
+        //       duration: 3000,
+        //       isClosable: true,
+        //       position: "top",
+        //     });
+        //   }
+        //   else{
+        //     toast({
+        //       title: 'Wrong Credentials! ',
+        //       status: 'error',
+        //       duration: 3000,
+        //       isClosable: true,
+        //       position: "top",
+        //     });
+        //   }
+        // } 
+        // catch (error) {
+        //     console.log(error);   
+        // }
+        // // console.log(isAuth);
         
-        setUser(initState)
-        onClose();
+        // setUser(initState)
+        // onClose();
     }
 
     // console.log(auth);
     return (
       <>
-       {auth ? <Text > <LogOut /> </Text> : <Text onClick={onOpen} color="black" cursor="pointer" _hover={{color:"#10847E"}} >Hello, Log in </Text>}
+       {<Text onClick={onOpen} color="black" cursor="pointer" _hover={{color:"#10847E"}} >Hello, Log in </Text>}
         <Drawer
           isOpen={isOpen}
           placement='right'

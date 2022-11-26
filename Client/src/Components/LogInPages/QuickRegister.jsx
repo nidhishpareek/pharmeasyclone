@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react'
 import { Box, Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Flex, FormLabel, Image, Input, Stack, useDisclosure, InputGroup, InputRightElement, Text, useToast, FormControl } from "@chakra-ui/react";
+import { signupApi } from '../../api/api';
 
 const initState ={
     name:"",
@@ -9,7 +10,6 @@ const initState ={
 
 export const QuickRegister = () => {
 
-    const auth = localStorage.getItem("isAuth");
     
     const toast= useToast();
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -28,56 +28,49 @@ export const QuickRegister = () => {
     // console.log(user);
     const handleReg = async(e)=>{
         e.preventDefault();
-        let res = await fetch(`https://pharmeasy-server1234.herokuapp.com/Users`);
-        let res2 = await res.json();
+        signupApi(user.email,user.name,user.password).then(res=>console.log(res)).catch(err=>console.log(err))
         // console.log(res2);
-
-        let flag = false;
-        res2.map((elem) => {
-            if(elem.email === user.email){
-                flag = true;
-            }
-        })
-        try {
-                if(!flag){
-                    fetch(`https://pharmeasy-server1234.herokuapp.com/Users`,{
-                        method:'POST',
-                        body:JSON.stringify(user),
-                        headers:{
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                    toast({
-                        title: 'User Registered Successfully',
-                        status: 'success',
-                        duration: 3000,
-                        isClosable: true,
-                        position: "top",
-                    });
-                }
-                else{
-                    toast({
-                        title: 'User Already Exists',
-                        status: "info",
-                        duration: 3000,
-                        isClosable: true,
-                        position: "top",
-                    });
+       
+    //     try {
+    //             if(!flag){
+    //                 fetch(`https://pharmeasy-server1234.herokuapp.com/Users`,{
+    //                     method:'POST',
+    //                     body:JSON.stringify(user),
+    //                     headers:{
+    //                         'Content-Type': 'application/json'
+    //                     }
+    //                 })
+    //                 toast({
+    //                     title: 'User Registered Successfully',
+    //                     status: 'success',
+    //                     duration: 3000,
+    //                     isClosable: true,
+    //                     position: "top",
+    //                 });
+    //             }
+    //             else{
+    //                 toast({
+    //                     title: 'User Already Exists',
+    //                     status: "info",
+    //                     duration: 3000,
+    //                     isClosable: true,
+    //                     position: "top",
+    //                 });
                     
-                }
-            }
-        catch (error) {
-            console.log(error);   
-        }
+    //             }
+    //         }
+    //     catch (error) {
+    //         console.log(error);   
+    //     }
     
-        setUser(initState)
+    //     setUser(initState)
         
-       onClose(); 
+    //    onClose(); 
     }
 
   return (
     <FormControl  >
-        {!auth &&  <Text onClick={onOpen} fontSize="18px" color="#4f585e" py="20px">
+        {<Text onClick={onOpen} fontSize="18px" color="#4f585e" py="20px">
                 Don't have an account ? 
                 <span style={{ color: "#159a94", cursor: "pointer" }}>
                     {" "}
