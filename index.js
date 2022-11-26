@@ -21,19 +21,12 @@ app.use(bodyParser.json());
 
 
 
-<<<<<<< HEAD
 
 app.use("/user",authMiddleware,userRouter);
 app.use("/cart",authMiddleware,cartRouter);
-=======
-app.use("/user",userRouter);
-
-// app.use("/cart",cartRouter);
->>>>>>> 1c442bc2aa58b6ac6ac3df113f9798110d042d36
 // app.use("/orders",orderRouter);
    app.use("/products",productsRouter);
 
-<<<<<<< HEAD
 
 
 async function getCart(){
@@ -41,23 +34,6 @@ async function getCart(){
    console.log(data);
 }
 getCart();
-=======
-// async function cart  (){
-    
-    // const user = await  Cart.create({
-    //     userId:'637e6071895d22ca7a477f50',
-    //     cartItems:[{
-    //         productId:'637e45bbe056124f16be5c9d',
-    //         quantity:1,
-    //         discount:10,
-
-    //     }]
-    // });
-    // console.log(await Cart.find());
-
-// }
-// cart();
->>>>>>> 1c442bc2aa58b6ac6ac3df113f9798110d042d36
 
 
 
