@@ -5,16 +5,19 @@ const jwt = require("jsonwebtoken");
 async function authMiddleware(req, res, next) {
   let token = req.headers.authorization || '';
   token = token.split(" ")[1];
+  console.log(token);
   
   if (token) {
     try {
-      const result = jwt.verify(token, process.env.JWT_SECRET_KEY);
       
-      let user = await User.findById(result.user._id);
-      req.user = user;
+      const result =await jwt.verify(token, process.env.JWT_SECRET_KEY);
+      console.log(result);
+      
+      // let user = await User.findById(result._id);
+      req.user = result;
       
     } catch (error) {
-      console.log("error in verifying token", error);
+      console.log(error);
     }
   }
 

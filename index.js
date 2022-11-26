@@ -6,11 +6,11 @@ const { connectDatabase } = require('./Database/dbConnect');
 const { Cart } = require('./models/cart.model');
 const { Product } = require('./models/product.models');
 const { User } = require('./models/user.model');
-const { productsRouter } = require('./routes/products.router');
-const { cartRouter } = require('./routes/cart.router');
-// const { orderRouter } = require('./routes/order.router');
+const { productsRouter } = require('./routes/products.routes');
+const { cartRouter } = require('./routes/cart.routes');
+// const { orderRouter } = require('./routes/order.routes');
 
-const { userRouter } = require('./routes/user.router');
+const { userRouter } = require('./routes/user.routes');
 const { authMiddleware } = require('./middlewares/auth');
 const app = express();
 app.use(express.json());
@@ -25,15 +25,11 @@ app.use(bodyParser.json());
 app.use("/user",authMiddleware,userRouter);
 app.use("/cart",authMiddleware,cartRouter);
 // app.use("/orders",orderRouter);
-   app.use("/products",productsRouter);
+app.use("/products",productsRouter);
 
 
 
-async function getCart(){
-   const data = await Cart.find();
-   console.log(data);
-}
-getCart();
+
 
 
 

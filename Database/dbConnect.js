@@ -5,7 +5,7 @@ async function connectDatabase() {
         
         mongoose.connect(process.env.MONGO_URI, (err) => {
             if (err) {
-                console.log('Error conencting to DB')
+                console.log('Error connecting to DB')
                 reject(err)
             } else {
                 console.log('Successfully connected to DB')

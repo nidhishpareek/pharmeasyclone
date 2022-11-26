@@ -1,8 +1,7 @@
 require('dotenv').config()
 const { User } = require("../models/user.model");
 const jwt = require("jsonwebtoken");
-const bcrypt = require('bcryptjs');
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET_KEY;
 // const firebase = require("firebase");
 // firebase.auth().useDeviceLanguage();
 // 
@@ -11,11 +10,11 @@ const JWT_SECRET = process.env.JWT_SECRET;
 // }
 
 const newJWTToken = (user) => {
-  const { name, gender, email, username } = user;
+  const { name, gender, email, username, _id } = user;
   console.log(JWT_SECRET)
   return jwt.sign(
-    { name, gender, email, username },
-    '602bf9c1352835aac421b0'
+    { name, gender, email, username , _id },
+    JWT_SECRET
   );
 }; 
 
@@ -62,7 +61,6 @@ const login = async (req, res) => {
 };
 const checkLoggedIn = (req, res) => {
   const { user } = req;
-  console.log(user);
 
   if (user) {
     return res.send({
