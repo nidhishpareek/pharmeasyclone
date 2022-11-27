@@ -20,6 +20,7 @@ function ProductsGrid({data,loading}) {
           newPrice={el.actual_price}
           originalPrice={el.crossed_price
           }
+          brand={el.manufacturer}
           offer={Math.ceil(((el.crossed_price - el.actual_price)/el.crossed_price)*100)}
           id={el._id}
           key={el._id}

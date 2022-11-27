@@ -21,7 +21,9 @@ import {
 import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginAPI } from "../../allAPI";
+import { getUserCart } from "../../api/api";
 import { getSuccess } from "../../Redux/Auth/action";
+import { setCart } from "../../Redux/Cart/action";
 import GitAuthButton from "./GitAuthButton";
 import { LogOut } from "./LogOut";
 import { QuickRegister } from "./QuickRegister";
@@ -45,6 +47,13 @@ export function LoginIndividualSlider() {
 
   // const {isAuth} = useSelector((state) => state);
   const dispatch = useDispatch();
+  const { cartItems,totalCount } = useSelector((state) => state.cart);
+  
+  function getCart() {
+   getUserCart().then(res=>{
+    dispatch(setCart(res.data.data.cartItems))
+}).catch(err=>console.log(err));
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -64,9 +73,11 @@ export function LoginIndividualSlider() {
       .then((jsonresponse) => {
         if (jsonresponse.status === 200) {
           console.log("logged in");
+          
           dispatch(getSuccess(true));
           localStorage.setItem("isAuth", true);
-          localStorage.setItem("token", JSON.stringify(jsonresponse.token));
+          localStorage.setItem("token", jsonresponse.token);
+          console.log(jsonresponse);
           toast({
             title: "User Logged in Successfully",
             status: "success",
@@ -74,6 +85,7 @@ export function LoginIndividualSlider() {
             isClosable: true,
             position: "top",
           });
+          onClose();
         } else {
           console.log(
             "aeoasjl error message",
@@ -100,18 +112,19 @@ export function LoginIndividualSlider() {
           position: "top",
         });
         console.log(err);
-      });
+      }).finally(getCart)
 
     setUser(initState);
-    onClose();
+    
+    
   };
 
   return (
     <>
       {auth ? (
         <Text>
-          {" "}
-          <LogOut />{" "}
+          
+          <LogOut />
         </Text>
       ) : (
         <Text
@@ -257,7 +270,7 @@ export function LoginIndividualSlider() {
               <QuickRegister
                 color={"#159a94"}
                 font={"13px"}
-                onClick={onClose}
+                onClick={()=>onClose()}
               />
             </Flex>
           </DrawerBody>

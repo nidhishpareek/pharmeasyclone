@@ -11,10 +11,13 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { clearCart } from "../../Redux/Cart/action";
 
 export function LogOut() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const dispatch = useDispatch();
   // const [username, setusername] = useState('User')
   const cancelRef = useRef();
   const navigate = useNavigate();
@@ -35,6 +38,7 @@ export function LogOut() {
   const handleLogOut = () => {
     // console.log("LogOut Called");
     localStorage.clear();
+    // dispatch(clearCart());
     onClose();
   };
 

@@ -1,37 +1,34 @@
 import { Select } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { updateCartItem } from "../../api/api";
 import { updateCart } from "../../Redux/Cart/action";
 
 function QuantitySelecter({ id,amount }) {
   const dispatch = useDispatch();
-  const [amt, setAmount] = useState(amount);
-function update(id,amount){
-    dispatch(updateCart(id,+amount));
+  const [amt, setAmount] = useState(+amount);
+
+
+function update(id){
+   updateCartItem(id,+amt).then(res=>{console.log(res)
+    dispatch(updateCart(id,+amt))}).catch(err=>console.log(err))
+    
 }
 
+useEffect(()=>{
+  update(id);
 
-  useEffect(()=>{
-    const body = {
-        amount:+amt
-    }
-    
-    fetch(`https://pharmeasy-server1234.herokuapp.com/Cart/${id}`,{
-        method:"PATCH",
-        body:JSON.stringify(body),
-        headers:{"content-type": "application/json"}
-    }).then((res)=>res.json()).catch((err)=>console.log(err))
-    
-   
-    
-  },[amt])
+
+},[amt])
+
+
+ 
 
   return (
     <Select
       value={amt}
       onChange={(e) => {
-         setAmount(e.target.value);
-         update(id,e.target.value)
+         setAmount(prev=>e.target.value);
          
       }}
       width="100px"

@@ -23,9 +23,9 @@ const GithubAuth = require("./githubAuth");
 // }
 
 const newJWTToken = (user) => {
-  const { name, gender, email, username } = user;
-  console.log(JWT_SECRET_KEY);
-  return jwt.sign({ name, gender, email, username }, JWT_SECRET_KEY);
+  const { name, gender, email, username, _id } = user;
+  // console.log(JWT_SECRET_KEY);
+  return jwt.sign({ name, gender, email, username, _id }, JWT_SECRET_KEY);
 };
 
 const signup = async (req, res) => {
@@ -37,16 +37,16 @@ const signup = async (req, res) => {
     if (user) {
       return res
         .status(400)
-        .send({ message: "User Elready Exists", status: 400 });
+        .send({ message: "User Already Exists", status: 400 });
     } else {
       user = await User.create(newUser);
       console.log("asfdj;lk");
 
-      const token = newJWTToken(user);
-      console.log(token);
+      // const token = newJWTToken(user);
+      // console.log(token);
       return res
         .status(201)
-        .send({ message: "User Created Successfully", token, status: 201 });
+        .send({ message: "User Created Successfully", status: 201 });
     }
   } catch (error) {
     res.status(500).send({ error: error.message, status: 500 });

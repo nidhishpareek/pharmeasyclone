@@ -14,15 +14,21 @@ import React, { useEffect } from "react";
 import { Container, Stack } from "react-bootstrap";
 import { FiTrash2 } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
+import { deleteCartItem } from "../../api/api";
 import { remove } from "../../Redux/Cart/action";
 import QuantitySelecter from "./QuantitySelecter";
 
 function CartProduct(props) {
     const {data} = props;
-    const {id,amount,originalPrice,newPrice,offer,img1,company,desc} = data;
+    
+    const {productId,quantity} = data;
     const dispatch = useDispatch();
-    const {func} = props
-
+    function removeItem(id){
+        
+      deleteCartItem(productId._id).then(res=>{
+        console.log(res);
+        dispatch(remove(id))}).catch((err)=>console.log(err))
+  }
     
     
    
@@ -40,30 +46,30 @@ function CartProduct(props) {
       
     >
       <Box   width={"100px"} height="60px"  >
-        <Image  width="100%" height="100%" src={img1}  objectFit="fill" ></Image>
+        <Image  width="100%" height="100%" src={productId.img1}  objectFit="fill" ></Image>
       </Box>
       <Box  width={"100%"}>
         <HStack alignItems={"flex-start"} justify={"space-between"}>
-          <Text fontWeight={"500"} noOfLines="2">{desc}</Text>
+          <Text fontWeight={"500"} noOfLines="2">{productId.title}</Text>
           
-         <DeleteIcon _hover={{color:"red"}} cursor="pointer" onClick={()=>func(id)}  fontSize={"16px"} />
+         <DeleteIcon _hover={{color:"red"}} cursor="pointer" onClick={()=>removeItem(productId._id)}  fontSize={"16px"} />
         </HStack>
         <Text fontSize={"14px"} color="rgba(0,0,0,0.6)" mb={"6px"}>
-          By {company}
+          By {productId.manufacturer}
         </Text>
         
         <HStack justify={"space-between"}>
-          <QuantitySelecter id={id} amount={amount} />
+          <QuantitySelecter id={productId._id} amount={quantity} />
           <VStack>
             <HStack>
               <Text fontSize={"12px"} textDecor={"line-through"}>
-              ₹ {originalPrice}
+              ₹ {productId.crossed_price}
               </Text>
               <Text fontSize={"12px"} color="red">
-                {offer}% OFF
+                {0}% OFF
               </Text>
             </HStack>
-            <Text textAlign={"right"} fontSize={"14px"} fontWeight="600">₹ {parseFloat((newPrice * amount).toFixed(2))}</Text>
+            <Text textAlign={"right"} fontSize={"14px"} fontWeight="600">₹ {parseFloat((productId.actual_price * quantity).toFixed(2))}</Text>
           </VStack>
         </HStack>
         <Text  fontSize={"14px"} color="rgba(0,0,0,0.6)">

@@ -17,12 +17,13 @@ const cartReducer = (state = cartInitialState, action) => {
     case types.GET_TOTAL:
       let { totalAmount, totalCount,totalOriginalAmount } = state.cartItems.reduce(
         (cartTotal, cartItem) => {
-          const { newPrice, amount , originalPrice } = cartItem;
-          const itemTotal = newPrice * amount;
-          const OriginalTotal = originalPrice * amount;
+          const { productId , quantity } = cartItem;
+          const { actual_price , crossed_price } = productId;
+          const itemTotal = actual_price * quantity;
+          const OriginalTotal = crossed_price * quantity;
 
           cartTotal.totalAmount += itemTotal;
-          cartTotal.totalCount += amount;
+          cartTotal.totalCount += quantity;
           cartTotal.totalOriginalAmount += OriginalTotal;
           return cartTotal;
         },
@@ -38,8 +39,8 @@ const cartReducer = (state = cartInitialState, action) => {
 
     case types.UPDATE:
       let tempCartInc = state.cartItems.map((cartItem) => {
-        if (cartItem.id === action.payload.id) {
-          return { ...cartItem, amount: action.payload.amount };
+        if (cartItem.productId._id === action.payload.id) {
+          return { ...cartItem, quantity: action.payload.amount };
         }
         return cartItem;
       });
@@ -50,7 +51,7 @@ const cartReducer = (state = cartInitialState, action) => {
       return {
         ...state,
         cartItems: state.cartItems.filter(
-          (cartItem) => cartItem.id !== action.payload
+          (cartItem) => cartItem.productId._id !== action.payload
         ),
       };
       case types.ADD_ITEM:

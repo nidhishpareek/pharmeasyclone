@@ -31,6 +31,7 @@ import SingleProductBreadCumb from "./SingleProductBreadCumb";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { addToCart, getCartTotal, remove, updateCart } from "../../Redux/Cart/action";
+import { AddItemToCart } from "../../api/api";
 
 const Product = (props) => {
   const toast= useToast();
@@ -49,13 +50,10 @@ const Product = (props) => {
   const btnRef = React.useRef(null);
   const { totalAmount,cartItems } = useSelector((state) => state.cart);
  
-function updateCart(amt,id){
-    axios.post("https://pharmeasy-server1234.herokuapp.com/Cart",{
-        ...data,
-        amount:amt,
-    }).then(res=>{
-        dispatch(addToCart({...data,amount:amt}))
-    })  
+function updateCart(amt){
+    AddItemToCart(data._id,amt).then(res=>{
+        dispatch(addToCart({productId:data,quantity:amt}))
+    }).catch(err=>console.log(err))  
 }
 function update(id,amount){
     const body = {
@@ -81,7 +79,7 @@ function removeItem(id){
 
 }
 useEffect(()=>{
-  console.log("first")
+  // console.log("first")
     dispatch(getCartTotal())
 
   },[])
@@ -264,7 +262,7 @@ useEffect(()=>{
                   </Text>
                 </Flex>
                 <Box>
-                  {!cartItems.find(e=>e.id===data.id) ? <VStack><Select
+                  {!cartItems.find(e=>e.productId._id===data._id) ? <VStack><Select
       value={amt}
       onChange={(e) => {
          setAmount(+e.target.value);
@@ -302,7 +300,7 @@ useEffect(()=>{
                         return;
                     }
                       
-                      updateCart(amt,data.id);
+                      updateCart(amt);
                     
                     }}
                     size={{ base: "sm", md: "md", lg: "lg" }}
@@ -372,12 +370,12 @@ useEffect(()=>{
                   {data.offer}% OFF
                 </Text>
               </Flex>
-              <Box>{!cartItems.find(e=>e.id===data.id) ? <Button
+              <Box>{!cartItems.find(e=>e.productId._id===data._id) ? <Button
                   ref={btnRef}
                   onClick={() => {
                     // onOpen();
                     // setmodalpos(false);
-                    updateCart(amt,data.id)
+                    updateCart(amt)
                   }}
                   
                   bgColor="#10847E"
@@ -392,7 +390,7 @@ useEffect(()=>{
                   ) : (
                     "Add To Cart"
                   )}
-                </Button> : <Button onClick={()=>removeItem(data.id)}>Remove</Button>}
+                </Button> : <Button onClick={()=>removeItem(data._id)}>Remove</Button>}
                 
               </Box>
             </Flex>

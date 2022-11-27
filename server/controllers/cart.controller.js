@@ -56,13 +56,15 @@ async function addItemToCart(req, res) {
 async function removeItemFromCart(req, res) {
   try {
     const { user } = req;
+    const {id} = req.params
 
     if (!user) {
       return res.status(401).send({ message: "Not logged in" });
     }
-    const resp = await Cart.updateOne({userId:user._id}, {
-      $pull: { cartItems: { productId: req.body.productId } },
-    });
+    const resp = await Cart.findOneAndUpdate({userId:user._id}, {
+      $pull: { cartItems: { productId: id } },
+      
+    },{new: true})
     
     return res.send({message:"Item Deleted Successfully",data: resp})
   } catch (error) {
@@ -73,15 +75,16 @@ async function updateCartItem(req,res){
     try {
 
         const { user } = req;
+        const {id} = req.params
 
     if (!user) {
       return res.status(401).send({ message: "Not logged in" });
     }
-    const product  = await  Cart.findOne({userId:user._id,"cartItems.productId":req.body.productId})
+    const product  = await  Cart.findOne({userId:user._id,"cartItems.productId":id})
     if(!product){
       return res.status(404).send({message:'product not found'})
     }
-    const cart = await Cart.updateOne({userId:user._id,"cartItems.productId":req.body.productId},{
+    const cart = await Cart.updateOne({userId:user._id,"cartItems.productId":id},{
         $set:{"cartItems.$.quantity":req.body.quantity}
     })
 
