@@ -5,7 +5,7 @@ const userRouter = express.Router();
 userRouter.get("/checkLoggedIn", checkLoggedIn )
 userRouter.post('/login', login)
 userRouter.post('/signup', signup)
-userRouter.post('/githubauth', githublogin)
+userRouter.get('/githubsignin', githublogin)
 
 
-module.exports = {userRouter};
+module.exports = {userRouter}; 

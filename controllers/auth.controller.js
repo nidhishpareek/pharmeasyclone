@@ -96,29 +96,29 @@ const checkLoggedIn = (req, res) => {
 };
 
 async function githublogin(req, res) {
+  console.log('signin try')
   try {
     const { code } = req.query;
 
     let Oauth = new GithubAuth();
     const userDetails = await Oauth.getUser(code);
 
-    let existingUser = await userModel.findOne({
-      authType: "github",
-      username: userDetails.login,
-    });
-
+    let existingUser = await User.findOne({username: userDetails.login});  
+    console.log('found existingUser', existingUser);
     if (!existingUser) {
-      existingUser = await userModel.create({
+    console.log('createing new user');
+      existingUser = await User.create({
         authType: "github",
         name: userDetails.name,
-        githubUsername: userDetails.login,
+        username: userDetails.login,
         image: userDetails.avatar_url,
         email: userDetails.email,
       });
+    console.log('created user', existingUser);
+
     }
-
-    let token = generateToken(existingUser);
-
+    let token = newJWTToken(existingUser);
+    console.log(token);
     return res.status(200).send({
       status: "success",
       data: {
@@ -130,6 +130,7 @@ async function githublogin(req, res) {
     return res.status(400).send({
       status: "error",
       message: "Something went wrong",
+      error: err
     });
   }
 }
