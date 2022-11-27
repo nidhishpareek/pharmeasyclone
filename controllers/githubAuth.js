@@ -3,10 +3,10 @@ require("dotenv").config();
 
 class GithubAuth {
   async accessToken(code) {
-    try {
-      let clientId = process.env.GIT_CLIENT_ID;
-      let clientSecret = process.env.GIT_CLIENT_SECRET;
-      let url = `https://github.com/login/oauth/access_token?client_id=${clientId}&client_secret=${clientSecret}&code=${code}`;
+    try { 
+      let GIT_CLIENT_ID = process.env.GIT_CLIENT_ID;
+      let GIT_CLIENT_SECRET = process.env.GIT_CLIENT_SECRET;
+      let url = `https://github.com/login/oauth/access_token?client_id=${GIT_CLIENT_ID}&client_secret=${GIT_CLIENT_SECRET}&code=${code}`;
       let response = await axios.post(url);
       const result = new URLSearchParams(response.data);
       if (result.get("error")) {
