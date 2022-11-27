@@ -1,4 +1,4 @@
-import { Box, Image, Button, useToast } from "@chakra-ui/react";
+import { Box, Image, Button, useToast, Link } from "@chakra-ui/react";
 import { GitAuthAPI } from "../../allAPI";
 import gitIcon from "../../BannerImages/github.svg";
 const GitAuthButton = () => {
@@ -15,23 +15,23 @@ const GitAuthButton = () => {
   // };
   return (
     <Box>
-      <Button
-      as={'link'}
-      href='https://github.com/login/oauth/authorize?client_id=ab76271b8143f19ff35d'
-        // onClick={gitLoginFunction}
-        w={"100%"}
-        style={{ backgroundColor: "black", color: "white" }}
-        leftIcon={
-          <Image
-            src={gitIcon}
-            h="40px"
-            bgColor="white"
-            borderRadius="50%"
-          ></Image>
-        }
-      > 
-        Sign in with GitHub
-      </Button>
+      <Link  href='https://github.com/login/oauth/authorize?client_id=ab76271b8143f19ff35d'>
+        <Button
+          // onClick={gitLoginFunction}
+          w={"100%"}
+          style={{ backgroundColor: "black", color: "white" }}
+          leftIcon={
+            <Image
+              src={gitIcon}
+              h="40px"
+              bgColor="white"
+              borderRadius="50%"
+            ></Image>
+          }
+        >
+          Sign in with GitHub
+        </Button>
+      </Link>
     </Box>
   );
 };
