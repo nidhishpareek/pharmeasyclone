@@ -14,7 +14,7 @@ import NotFound from './NotFound'
 import Products from './Products'
 import Search from './Search'
 import SingleProduct from './SingleProduct'
-
+import GitAuthentication from './GitAuthentication'
 function AllRoutes() {
   const { cartItems,totalCount } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
@@ -43,6 +43,7 @@ function AllRoutes() {
         <Route path='/delivery' element={<Delivery />}></Route>
         <Route path='/payment' element={<Payment />}></Route>
         <Route path='/cart' element={<Cart />}></Route>
+        <Route path='/githubsignin' element={<GitAuthentication />}></Route>
 
         
     </Routes>
