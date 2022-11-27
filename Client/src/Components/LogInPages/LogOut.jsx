@@ -15,23 +15,23 @@ import { useNavigate } from "react-router-dom";
 
 export function LogOut() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [username, setusername] = useState('User')
+  // const [username, setusername] = useState('User')
   const cancelRef = useRef();
   const navigate = useNavigate();
-  const parseJwt = async (token) => {
-    try {
-      return JSON.parse(atob(token.split('.')[1]));
-    } catch (e) {
-      return null;
-    }
-  };
-  if (localStorage.getItem("token")) {
-    let token = localStorage.getItem("token");
-    parseJwt(token).then((data) => {
-      data.username ? setusername(data.username) : setusername(data.name)
-      console.log("jwt token decoded", data);
-    })
-  }
+  // const parseJwt = async (token) => {
+  //   try {
+  //     return JSON.parse(atob(token.split('.')[1]));
+  //   } catch (e) {
+  //     return null;
+  //   }
+  // };
+  // if (localStorage.getItem("token")) {
+  //   let token = localStorage.getItem("token");
+  //   parseJwt(token).then((data) => {
+  //     data.username ? setusername(data.username) : setusername(data.name)
+  //     console.log("jwt token decoded", data);
+  //   })
+  // }
   const handleLogOut = () => {
     // console.log("LogOut Called");
     localStorage.clear();
@@ -45,7 +45,7 @@ export function LogOut() {
         bg={"transparent"}
         _hover={{ backgroundColor: "transparent", color: "teal" }}
         onClick={onOpen}
-      >{username}</Button>
+      >User</Button>
       <AlertDialog
         motionPreset="slideInBottom"
         leastDestructiveRef={cancelRef}
