@@ -26,7 +26,10 @@ function MyOrders() {
         {data.map(el=>
             <Stack key={el._id} border="1px solid black" padding={4} borderRadius="10px">
                 <Box>
-                <Heading fontSize={"25px"}>Order Placed on : {el.createdAt}</Heading>
+                <Heading fontSize={"25px"}>Order Placed on : {
+                    el.createdAt.split('T')[0] 
+                }
+                   </Heading>
                 </Box>
                 
                 {
