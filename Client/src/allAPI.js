@@ -1,4 +1,4 @@
-export const loginAPI  = 'http://localhost:8080/user/login'
-export const signupAPI  = 'http://localhost:8080/user/signup'
-export const checkLoggedInAPI  = 'http://localhost:8080/checkLoggedIn/'
-export const GitAuthURL  = 'http://localhost:8080/user/githubsignin'
+export const loginAPI  = 'https://pharmeasyclone.onrender.com/user/login'
+export const signupAPI  = 'https://pharmeasyclone.onrender.com/user/signup'
+export const checkLoggedInAPI  = 'https://pharmeasyclone.onrender.com/checkLoggedIn/'
+export const GitAuthURL  = 'https://pharmeasyclone.onrender.com/user/githubsignin'
