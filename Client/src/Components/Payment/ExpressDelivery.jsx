@@ -10,7 +10,7 @@ export const Delivery = () => {
     const initPayment = (data) => {
 		const options = {
 			key: "rzp_test_qOdpyGDXfL2tdm",
-			amount: totalAmount,
+			amount: totalAmount * 100,
 			currency: 'INR',
 			name: 'PharmEasy Orders',
 			description: "Test Transaction",
