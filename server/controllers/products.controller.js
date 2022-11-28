@@ -52,7 +52,7 @@ async function getAllProductsByCategory(req, res) {
     const filters = {
       category,
     };
-    if(brand ){
+    if(brand){
       filters.manufacturer = brand;
     }
 
@@ -144,6 +144,23 @@ async function getAllProductsBySubCategory(req, res) {
       });
     }
   }
+  async function getProductsBySearch(req,res){
+    try {
+      const {q} = req.query
+      console.log(q);
+      const products = await Product.find({
+        title: {
+          $regex: q
+      }
+    })
+
+      return res.status(201).send({message:"success",data:products})
+      
+    } catch (error) {
+      return res.status(500).send({message:error.message,})
+      
+    }
+  }
 
 
 
@@ -151,5 +168,6 @@ module.exports = {
   getAllProductsByCategory,
   getProductById,
   getCategories,
-  getAllProductsBySubCategory
+  getAllProductsBySubCategory,
+  getProductsBySearch
 };

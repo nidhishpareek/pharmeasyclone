@@ -17,17 +17,19 @@ import SingleProduct from './SingleProduct'
 import GitAuthentication from './GitAuthentication'
 import { getUserCart } from '../api/api'
 function AllRoutes() {
-  const { cartItems,totalCount } = useSelector((state) => state.cart);
+
   const dispatch = useDispatch();
   function getCart() {
-   getUserCart().then(res=>{
-    dispatch(setCart(res.data.data.cartItems))
-}).catch(err=>console.log(err));
-  }
-  useEffect(()=>{
+    getUserCart().then(res=>{
+     dispatch(setCart(res.data.data.cartItems))
+ }).catch(err=>console.log(err));
+   }
+
+   useEffect(()=>{
     getCart();
 
-  },[])
+   },[])
+ 
 
    
   return (

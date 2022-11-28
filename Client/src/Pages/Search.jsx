@@ -3,6 +3,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom'
+import { AddItemToCart, getSearchProducts } from '../api/api';
 import { addToCart, getCartTotal, remove } from '../Redux/Cart/action';
 
 function Search() {
@@ -35,7 +36,7 @@ function removeItem(id){
 }
 
  useEffect(()=>{
-  axios.get(`https://pharmeasy-server1234.herokuapp.com/Products?q=${name}`).then(res=>setData(res.data))
+  getSearchProducts(name).then(res=>setData(res.data.data)).catch(err=>console.log(err))
  },[name])
  useEffect(()=>{
   dispatch(getCartTotal());
@@ -53,22 +54,24 @@ function removeItem(id){
             <Image mr="20px" w="50px" p="5px" src={el.img1} alt=""/>
           </Box>
           <Flex flexDirection="column" flex>
-              <Heading mb="10px" fontSize={{base: "18px", sm:"18px", md:"18px", lg:"22px", xl:"22px"}} color="#4f585e">{el.desc}</Heading>
-              <Text mb="10px" fontWeight="" color="#8897a4">By {el.company}</Text>
+              <Heading mb="10px" fontSize={{base: "18px", sm:"18px", md:"18px", lg:"22px", xl:"22px"}} color="#4f585e">{el.title}</Heading>
+              <Text mb="10px" fontWeight="" color="#8897a4">By {el.manufacturer}</Text>
               
               <Flex justifyContent="space-between" flexDirection={{base:"column", sm:"column", md:"column", lg:"row", xl:"row"}}>
                 <Flex>
-                  <Heading mr="5px" fontSize="22px" color="#4f585e">₹{el.newPrice}</Heading>
-                  <Text color="#8897a4" mr="5px" mt="5px">MRP <Text as="s" mr="5px">₹{el.originalPrice}</Text></Text>
+                  <Heading mr="5px" fontSize="22px" color="#4f585e">₹{el.actual_price}</Heading>
+                  <Text color="#8897a4" mr="5px" mt="5px">MRP <Text as="s" mr="5px">₹{el.crossed_price}</Text></Text>
                   
                 </Flex>
-                {!cartItems.find(e=>e.id===el.id)  ?
+                {!cartItems.find(e=>e.productId._id===el._id)  ?
                   <Button colorScheme={"teal"} onClick={()=>{
                     if(!isAuth){
                       navigate("/");
                       return;
                     }
-                    updateCart(1,el.id,el)
+                    AddItemToCart(el._id,1).then(res=>console.log(res)).catch(err=>console.log(err))
+                    dispatch(addToCart({productId:el,quantity:1}))
+
                   }}  mt="10px"     > Add to Cart</Button>
                   : 
                   <Button  mt="10px"  colorScheme={"teal"} variant="outline" onClick={()=>{
