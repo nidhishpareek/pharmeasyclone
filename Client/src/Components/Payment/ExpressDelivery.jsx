@@ -1,12 +1,17 @@
-import { Box, Button, Flex, Heading, Image, Radio, RadioGroup, Stack, Text, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, Hide } from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, Image, Radio, RadioGroup, Stack, Text, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, Hide, useToast } from '@chakra-ui/react'
 import axios from 'axios';
 import React from 'react';
 import { AiFillRightCircle } from 'react-icons/ai';
-import { useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Navigate, NavLink, useNavigate } from 'react-router-dom';
+import { createOrder } from '../../api/api';
+import { clearCart } from '../../Redux/Cart/action';
 export const Delivery = () => {
 
     const { totalAmount,totalOriginalAmount } = useSelector((state) => state.cart);
+    const toast = useToast();
+    const navigate  = useNavigate();
+    const dispatch = useDispatch();
     const initPayment = (data) => {
 		const options = {
 			key: "rzp_test_qOdpyGDXfL2tdm",
@@ -14,11 +19,22 @@ export const Delivery = () => {
 			currency: 'INR',
 			name: 'PharmEasy Orders',
 			description: "Test Transaction",
+            order_id: data.id,
 			handler: async (response) => {
 				try {
 					const verifyUrl = "http://localhost:8080/api/payment/verify";
 					const { data } = await axios.post(verifyUrl, response);
-					console.log(data);
+					createOrder().then(res=>dispatch(clearCart())).catch(err=>console.log(err)).finally(res=>{
+                        toast({
+                            title: "order Placed Successfully",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+            position: "top",
+                            
+                        })
+                        return navigate("/");
+                    })
 				} catch (error) {
 					console.log(error);
 				}

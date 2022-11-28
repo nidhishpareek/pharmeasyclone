@@ -16,6 +16,7 @@ import Search from './Search'
 import SingleProduct from './SingleProduct'
 import GitAuthentication from './GitAuthentication'
 import { getUserCart } from '../api/api'
+import MyOrders from './MyOrders'
 function AllRoutes() {
 
   const dispatch = useDispatch();
@@ -44,6 +45,7 @@ function AllRoutes() {
         <Route path='/payment' element={<Payment />}></Route>
         <Route path='/cart' element={<Cart />}></Route>
         <Route path='/githubsignin' element={<GitAuthentication />}></Route>
+        <Route path='/orders' element={<MyOrders />}></Route>
 
         
     </Routes>

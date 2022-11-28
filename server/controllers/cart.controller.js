@@ -8,9 +8,13 @@ async function getCartItems(req, res) {
       return res.status(401).send({ message: "Not logged in" });
     }
     // console.log(user._id);
-    const cart = await Cart.findOne({ userId: user._id }).populate({ path: 'userId', select: ['name','_id','email' ]}).populate({path: 'cartItems',
-    
-    populate: { path: 'productId' }});
+    const cart = await Cart.findOne({ userId: user._id })
+      .populate({ path: "userId", select: ["name", "_id", "email"] })
+      .populate({
+        path: "cartItems",
+
+        populate: { path: "productId" },
+      });
     if (!cart) {
       return res.send({ message: "Empty Cart" });
     }
@@ -34,18 +38,20 @@ async function addItemToCart(req, res) {
         cartItems: [
           { productId: req.body.productId, quantity: req.body.quantity },
         ],
-      })
-    }else{
-        const cart = await Cart.findOneAndUpdate({userId:user._id}, {
-            $push: {
-              cartItems: {
-                productId: req.body.productId,
-                quantity: req.body.quantity,
-              },
+      });
+    } else {
+      const cart = await Cart.findOneAndUpdate(
+        { userId: user._id },
+        {
+          $push: {
+            cartItems: {
+              productId: req.body.productId,
+              quantity: req.body.quantity,
             },
-          })
+          },
+        }
+      );
     }
-    
 
     return res.status(201).send({ message: "Item Added To Cart", data: cart });
   } catch (error) {
@@ -56,52 +62,54 @@ async function addItemToCart(req, res) {
 async function removeItemFromCart(req, res) {
   try {
     const { user } = req;
-    const {id} = req.params
+    const { id } = req.params;
 
     if (!user) {
       return res.status(401).send({ message: "Not logged in" });
     }
-    const resp = await Cart.findOneAndUpdate({userId:user._id}, {
-      $pull: { cartItems: { productId: id } },
-      
-    },{new: true})
-    
-    return res.send({message:"Item Deleted Successfully",data: resp})
+    const resp = await Cart.findOneAndUpdate(
+      { userId: user._id },
+      {
+        $pull: { cartItems: { productId: id } },
+      },
+      { new: true }
+    );
+
+    return res.send({ message: "Item Deleted Successfully", data: resp });
   } catch (error) {
-    return res.status(500).send({message:error.message})
+    return res.status(500).send({ message: error.message });
   }
 }
-async function updateCartItem(req,res){
-    try {
-
-        const { user } = req;
-        const {id} = req.params
+async function updateCartItem(req, res) {
+  try {
+    const { user } = req;
+    const { id } = req.params;
 
     if (!user) {
       return res.status(401).send({ message: "Not logged in" });
     }
-    const product  = await  Cart.findOne({userId:user._id,"cartItems.productId":id})
-    if(!product){
-      return res.status(404).send({message:'product not found'})
+    const product = await Cart.findOne({
+      userId: user._id,
+      "cartItems.productId": id,
+    });
+    if (!product) {
+      return res.status(404).send({ message: "product not found" });
     }
-    const cart = await Cart.updateOne({userId:user._id,"cartItems.productId":id},{
-        $set:{"cartItems.$.quantity":req.body.quantity}
-    })
+    const cart = await Cart.updateOne(
+      { userId: user._id, "cartItems.productId": id },
+      {
+        $set: { "cartItems.$.quantity": req.body.quantity },
+      }
+    );
 
-
-
-    return res.send({message:'success',data:cart})
-
-
-        
-    } catch (error) {
-        return res.status(500).send({message:error.message})
-        
-    }
+    return res.send({ message: "success", data: cart });
+  } catch (error) {
+    return res.status(500).send({ message: error.message });
+  }
 }
 module.exports = {
   getCartItems,
   addItemToCart,
   removeItemFromCart,
-  updateCartItem
+  updateCartItem,
 };

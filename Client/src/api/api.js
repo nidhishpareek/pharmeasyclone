@@ -67,6 +67,13 @@ export async function deleteCartItem(id){
 export async function getSearchProducts(q){
     return axios.get(`http://localhost:8080/products/search?q=${q}`)
 }
+export async function createOrder(){
+    return axios.get(`http://localhost:8080/orders/create`)
+}
+
+export async function getOrders(){
+    return axios.get(`http://localhost:8080/orders/`)
+}
 
 
 export const loginAPI  = 'http://localhost:8080/user/login'

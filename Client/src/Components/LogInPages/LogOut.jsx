@@ -34,7 +34,7 @@ export function LogOut() {
       let token = localStorage.getItem("token");
       parseJwt(token).then((data) => {
         data.username ? setusername(data.username) : setusername(data.name);
-        console.log("jwt token decoded", data);
+        // console.log("jwt token decoded", data);
       });
     }
   });
