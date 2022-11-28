@@ -40,7 +40,7 @@ export async function getAllProductsBySubCategory(page,subcategory,category,filt
     return axios.get(`http://localhost:8080/products/category/${category}/${subcategory}?page=${page}${brands}&sortBy=actual_price&sortOrder=${sortBy}`)
 }
 export async function getSingleProduct(id){
-    return axios.get(`http://localhost:8080/products/${id}`)
+    return axios.get(`http://localhost:8080/products/single/${id}`)
 
 }
 
@@ -62,6 +62,10 @@ export async function updateCartItem(id,quantity){
 }
 export async function deleteCartItem(id){
     return axios.delete(`http://localhost:8080/cart/${id}`)
+}
+
+export async function getSearchProducts(q){
+    return axios.get(`http://localhost:8080/products/search?q=${q}`)
 }
 
 
