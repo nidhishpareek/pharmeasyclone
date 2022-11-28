@@ -2,6 +2,7 @@ import { Box, Center, HStack, Image, Skeleton, Stack, VStack } from "@chakra-ui/
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { deleteCartItem } from "../../api/api";
 import { remove, setCart } from "../../Redux/Cart/action";
 import CartProduct from "./CartProduct";
 
@@ -11,16 +12,7 @@ function CartStack() {
   const [loading,setLoading] = useState(false)
  console.log(cartItems);
 
-  function removeItem(id){
-        
-    fetch(`https://pharmeasy-server1234.herokuapp.com/Cart/${id}`,{
-    method:"DELETE",
-   
-    headers:{"content-type": "application/json"}
-}).then((res)=>res.json()).then(dispatch(remove(id))).catch((err)=>console.log(err))
-
-
-}
+ 
 
  
 
@@ -33,7 +25,7 @@ function CartStack() {
   
   return (
     <VStack width={"100%"} >
-      {cartItems.map((el) => (!loading ?<CartProduct key={el.id} data={el} func={removeItem} />: <Skeleton> <CartProduct key={el.id} data={el} func={removeItem} /></Skeleton> 
+      {cartItems.map((el) => (!loading ?<CartProduct key={el.id} data={el}  />: <Skeleton> <CartProduct key={el.id} data={el}  /></Skeleton> 
         
       ))}
     </VStack>

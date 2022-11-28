@@ -14,22 +14,23 @@ import NotFound from './NotFound'
 import Products from './Products'
 import Search from './Search'
 import SingleProduct from './SingleProduct'
-
+import GitAuthentication from './GitAuthentication'
+import { getUserCart } from '../api/api'
+import MyOrders from './MyOrders'
 function AllRoutes() {
-  const { cartItems,totalCount } = useSelector((state) => state.cart);
+
   const dispatch = useDispatch();
   function getCart() {
-    
-    axios.get("https://pharmeasy-server1234.herokuapp.com/Cart").then((res) => {
-   
-      dispatch(setCart(res.data));
-    
-    })
-  }
-  useEffect(()=>{
+    getUserCart().then(res=>{
+     dispatch(setCart(res.data.data.cartItems))
+ }).catch(err=>console.log(err));
+   }
+
+   useEffect(()=>{
     getCart();
 
-  },[])
+   },[])
+ 
 
    
   return (
@@ -43,6 +44,8 @@ function AllRoutes() {
         <Route path='/delivery' element={<Delivery />}></Route>
         <Route path='/payment' element={<Payment />}></Route>
         <Route path='/cart' element={<Cart />}></Route>
+        <Route path='/githubsignin' element={<GitAuthentication />}></Route>
+        <Route path='/orders' element={<MyOrders />}></Route>
 
         
     </Routes>

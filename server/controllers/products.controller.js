@@ -9,7 +9,7 @@ async function getCategories(req, res) {
 
     totalCategories = totalCategories.filter(el=>{
         return (el==="Ayush" || el==="Covid Essentials" || el==="Devices" || el==="Fitness" ||
-        el==="Mom & Baby" || el==="Personal Care" || el==="Skin Care" || el==="Surgical" || el==='Treatments' || el === 'Tools & Appliances') ;
+        el==="Mom & Baby" || el==="Personal Care" || el==="Skin Care" || el==="Surgical" || el==='Treatments' || el === 'Tools & Appliances' || el === 'Eyewear' || el=== 'Veterinery') ;
     })
     res.send({ totalCategories });
   } catch (error) {
@@ -20,7 +20,7 @@ async function getProductById(req, res) {
   try {
     const { id } = req.params;
 
-    const product = await Product.find({
+    const product = await Product.findOne({
     _id: id,
   });
   
@@ -44,7 +44,7 @@ async function getAllProductsByCategory(req, res) {
     let { category } = req.params;
     let {
       brand ,
-      pageSize = 20,
+      pageSize = 30,
       page = 1,
       sortBy = "_id",
       sortOrder = "",
@@ -52,7 +52,7 @@ async function getAllProductsByCategory(req, res) {
     const filters = {
       category,
     };
-    if(brand ){
+    if(brand){
       filters.manufacturer = brand;
     }
 
@@ -82,6 +82,7 @@ async function getAllProductsByCategory(req, res) {
       pageSize,
       subCategories,
       totalBrands,
+      category,
     });
   } catch (err) {
     return res.status(500).send({
@@ -95,7 +96,7 @@ async function getAllProductsBySubCategory(req, res) {
       let { sub_category,category } = req.params;
       let {
        brand = "",
-        pageSize = 20,
+        pageSize = 30,
         page = 1,
         sortBy = "_id",
         sortOrder = "",
@@ -134,12 +135,30 @@ async function getAllProductsBySubCategory(req, res) {
         pageSize,
         subCategories,
         totalBrands,
+        category,
       });
     } catch (err) {
       return res.status(500).send({
         status: "error",
         message: "Something went wrong",
       });
+    }
+  }
+  async function getProductsBySearch(req,res){
+    try {
+      const {q} = req.query
+      console.log(q);
+      const products = await Product.find({
+        title: {
+          $regex: q
+      }
+    })
+
+      return res.status(201).send({message:"success",data:products})
+      
+    } catch (error) {
+      return res.status(500).send({message:error.message,})
+      
     }
   }
 
@@ -149,5 +168,6 @@ module.exports = {
   getAllProductsByCategory,
   getProductById,
   getCategories,
-  getAllProductsBySubCategory
+  getAllProductsBySubCategory,
+  getProductsBySearch
 };

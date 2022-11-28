@@ -31,6 +31,7 @@ import SingleProductBreadCumb from "./SingleProductBreadCumb";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { addToCart, getCartTotal, remove, updateCart } from "../../Redux/Cart/action";
+import { AddItemToCart } from "../../api/api";
 
 const Product = (props) => {
   const toast= useToast();
@@ -49,13 +50,10 @@ const Product = (props) => {
   const btnRef = React.useRef(null);
   const { totalAmount,cartItems } = useSelector((state) => state.cart);
  
-function updateCart(amt,id){
-    axios.post("https://pharmeasy-server1234.herokuapp.com/Cart",{
-        ...data,
-        amount:amt,
-    }).then(res=>{
-        dispatch(addToCart({...data,amount:amt}))
-    })  
+function updateCart(amt){
+    AddItemToCart(data._id,amt).then(res=>{
+        dispatch(addToCart({productId:data,quantity:amt}))
+    }).catch(err=>console.log(err))  
 }
 function update(id,amount){
     const body = {
@@ -81,13 +79,14 @@ function removeItem(id){
 
 }
 useEffect(()=>{
+  // console.log("first")
     dispatch(getCartTotal())
 
-  },[cartItems])
+  },[])
   return (
     <Box fontFamily="'Open Sans',sans-serif">
       <Box m="50px 0 50px 15px">
-        <SingleProductBreadCumb title={data.desc} />
+        <SingleProductBreadCumb title={data.title} />
       </Box>
       <Flex
         m="50px 15px"
@@ -168,12 +167,12 @@ useEffect(()=>{
                   p="3px"
                 >
                   <Img
-                    src={data.img4}
+                    src={data.img2}
                     alt=""
                     width="100%"
                     height="100%"
                     borderRadius="10px"
-                    onClick={() => (ref.current.src = data.img4)}
+                    onClick={() => (ref.current.src = data.img2)}
                   ></Img>
                 </GridItem>
                 <GridItem
@@ -183,12 +182,12 @@ useEffect(()=>{
                   p="3px"
                 >
                   <Img
-                    src={data.img5}
+                    src={data.img2}
                     alt=""
                     width="100%"
                     height="100%"
                     borderRadius="10px"
-                    onClick={() => (ref.current.src = data.img5)}
+                    onClick={() => (ref.current.src = data.img2)}
                   ></Img>
                 </GridItem>
                 <GridItem
@@ -210,11 +209,11 @@ useEffect(()=>{
             </Box>
             <Box className="contentbox" p="0px 25px">
               <Heading fontSize="25px" color="#4F585E" mb={2}>
-                {data.desc}
+                {data.title}
               </Heading>
               <Link>
                 <Text color="#10847E" mb={2}>
-                  Visit {data.company} store
+                  Visit {data.manufacturer} store
                 </Text>
               </Link>
               <Flex gap={5} mb={3}>
@@ -238,19 +237,19 @@ useEffect(()=>{
                   </Flex>
                 </Box>
                 <Box>
-                  <Text color="gray">( {data.ratings} ratings )</Text>
+                  <Text color="gray">( {Math.floor(Math.random() * (5 - 1 + 1) + 1)} ratings )</Text>
                 </Box>
               </Flex>
               <Flex justifyContent="space-between">
                 <Flex alignItems="flex-end">
                   <Text mr="10px" fontSize="20px" fontWeight="600">
                     {" "}
-                    ₹{data.originalPrice}
+                    ₹{data.actual_price}
                   </Text>
                   <Text>MRP </Text>
                   <Text mr="10px" fontSize="14px" as="del">
                     {" "}
-                    ₹{data.newPrice}
+                    ₹{data.crossed_price}
                   </Text>
                   <Text
                     fontSize="12px"
@@ -259,11 +258,11 @@ useEffect(()=>{
                     color="white"
                     as="b"
                   >
-                    {data.offer}% OFF
+                    {Math.ceil(((data.crossed_price - data.actual_price)/data.crossed_price)*100)}% OFF
                   </Text>
                 </Flex>
                 <Box>
-                  {!cartItems.find(e=>e.id===data.id) ? <VStack><Select
+                  {!cartItems.find(e=>e.productId._id===data._id) ? <VStack><Select
       value={amt}
       onChange={(e) => {
          setAmount(+e.target.value);
@@ -301,7 +300,7 @@ useEffect(()=>{
                         return;
                     }
                       
-                      updateCart(amt,data.id);
+                      updateCart(amt);
                     
                     }}
                     size={{ base: "sm", md: "md", lg: "lg" }}
@@ -321,185 +320,7 @@ useEffect(()=>{
                     navigate("/cart")
                   }}>View Cart</Button> }
                 </Box>
-                <Modal
-                  onClose={onClose}
-                  finalFocusRef={btnRef}
-                  isOpen={isOpen}
-                  scrollBehavior={scrollBehavior}
-                  isCentered
-                >
-                  <ModalOverlay bg="transparent" />
-
-                  <ModalContent
-                    w="170px"
-                    h="345px"
-                    ml={modalpos ? "15%" : "85%"}
-                  >
-                    <ModalBody p="0" cursor="pointer">
-                      <Text
-                        p="6px 16px"
-                        fontSize="20px"
-                        fontWeight="600"
-                        onClick={() => {
-                          onClose();
-                          setCartCount({});
-                          dispatch(remove(data.id))
-                        }}
-                      >
-                        Remove Item
-                      </Text>
-                      <Text
-                        _hover={{ bgColor: "teal.100" }}
-                        p="6px 16px"
-                        fontSize="16px"
-                        onClick={() => {
-                          onClose();
-                          setCartCount({ [data.id]: 1 });
-                          update(data.id,1)
-                          
-
-                        }}
-                      >
-                        1
-                      </Text>
-                      <Text
-                        _hover={{ bgColor: "teal.100" }}
-                        p="6px 16px"
-                        fontSize="16px"
-                        onClick={() => {
-                          onClose();
-                          setCartCount({ [data.id]: 2 });
-                          update(data.id,2)
-                          
-                        }}
-                      >
-                        2
-                      </Text>
-                      <Text
-                        _hover={{ bgColor: "teal.100" }}
-                        p="6px 16px"
-                        fontSize="16px"
-                        onClick={() => {
-                          onClose();
-                          setCartCount({ [data.id]: 3 });
-                          update(data.id,3)
-                         
-                        }}
-                      >
-                        3
-                      </Text>
-                      <Text
-                        _hover={{ bgColor: "teal.100" }}
-                        p="6px 16px"
-                        fontSize="16px"
-                        onClick={() => {
-                          onClose();
-                          setCartCount({ [data.id]: 4 });
-                          update(data.id,4)
-                         
-                        }}
-                      >
-                        4
-                      </Text>
-                      <Text
-                        _hover={{ bgColor: "teal.100" }}
-                        p="6px 16px"
-                        fontSize="16px"
-                        onClick={() => {
-                          onClose();
-                          setCartCount({ [data.id]: 5 });
-                          update(data.id,5)
-                          
-                        }}
-                      >
-                        5
-                      </Text>
-                      <Text
-                        _hover={{ bgColor: "teal.100" }}
-                        p="6px 16px"
-                        fontSize="16px"
-                        onClick={() => {
-                          onClose();
-                          setCartCount({ [data.id]: 6 });
-                          update(data.id,6)
-                         
-                        }}
-                      >
-                        6
-                      </Text>
-                      <Text
-                        _hover={{ bgColor: "teal.100" }}
-                        p="6px 16px"
-                        fontSize="16px"
-                        onClick={() => {
-                          onClose();
-                          setCartCount({ [data.id]: 7 });
-                          update(data.id,7)
-                         
-                        }}
-                      >
-                        7
-                      </Text>
-                      <Text
-                        _hover={{ bgColor: "teal.100" }}
-                        
-                        p="6px 16px"
-                        fontSize="16px"
-                        onClick={() => {
-                          onClose();
-                          setCartCount({ [data.id]: 8 });
-                          
-                          update(data.id,8)
-                          
-                        }}
-                      >
-                        8
-                      </Text>
-                      <Text
-                        _hover={{ bgColor: "teal.100" }}
-                        p="6px 16px"
-                        fontSize="16px"
-                        onClick={() => {
-                          onClose();
-                          setCartCount({ [data.id]: 9 });
-                          update(data.id,9)
-                         
-                        }}
-                      >
-                        9
-                      </Text>
-                      <Text
-                        _hover={{ bgColor: "teal.100" }}
-                        p="6px 16px"
-                        fontSize="16px"
-                        onClick={() => {
-                          onClose();
-                          setCartCount({ [data.id]: 10 });
-                          update(data.id,10)
-                         
-                        }}
-                      >
-                        10
-                      </Text>
-                     
-                      <Flex
-                        _hover={{ bgColor: "teal.100" }}
-                        p="6px 16px"
-                        alignItems="center"
-                        gap={2}
-                        onClick={() => {
-                          onClose();
-                          setCartCount({ [data.id]: 20 });
-                          update(data.id,20)
-                          
-                        }}
-                      >
-                        <Text fontSize="16px">20</Text>
-                        <Text fontSize="12px">Max Qty</Text>
-                      </Flex>
-                    </ModalBody>
-                  </ModalContent>
-                </Modal>
+                
               </Flex>
               <Text color="gray" fontSize="10px">
                 Inclusive of all taxes
@@ -549,12 +370,12 @@ useEffect(()=>{
                   {data.offer}% OFF
                 </Text>
               </Flex>
-              <Box>{!cartItems.find(e=>e.id===data.id) ? <Button
+              <Box>{!cartItems.find(e=>e.productId._id===data._id) ? <Button
                   ref={btnRef}
                   onClick={() => {
                     // onOpen();
                     // setmodalpos(false);
-                    updateCart(amt,data.id)
+                    updateCart(amt)
                   }}
                   
                   bgColor="#10847E"
@@ -569,7 +390,7 @@ useEffect(()=>{
                   ) : (
                     "Add To Cart"
                   )}
-                </Button> : <Button onClick={()=>removeItem(data.id)}>Remove</Button>}
+                </Button> : <Button onClick={()=>removeItem(data._id)}>Remove</Button>}
                 
               </Box>
             </Flex>

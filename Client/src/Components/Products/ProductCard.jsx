@@ -3,11 +3,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 
-function ProductCard({ image, title, originalPrice, newPrice, offer,id }) {
+function ProductCard({ image, title, originalPrice, brand, newPrice, offer,id }) {
   return (
     <Box
-      width="240px"
-      height="340px"
+      width="250px"
+      height="350px"
       border="1px solid rgba(0,0,0,0.2)"
       padding={4}
       borderRadius="10px"
@@ -25,6 +25,14 @@ function ProductCard({ image, title, originalPrice, newPrice, offer,id }) {
             fontWeight={"700"}
           >
             {title}
+          </Text>
+          <Text
+            noOfLines={2}
+            textAlign="left"
+            fontSize="10px"
+            fontWeight={"700"}
+          >
+            {brand}
           </Text>
         </Box>
         <Box>

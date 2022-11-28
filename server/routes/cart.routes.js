@@ -5,8 +5,8 @@ const cartRouter = express.Router();
 
 cartRouter.get('/',getCartItems)
 cartRouter.post('/',addItemToCart)
-cartRouter.patch('/',updateCartItem)
-cartRouter.delete('/',removeItemFromCart)
+cartRouter.patch('/:id',updateCartItem)
+cartRouter.delete('/:id',removeItemFromCart)
 
 
 

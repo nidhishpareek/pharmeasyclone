@@ -1,11 +1,61 @@
-import { Box, Button, Flex, Heading, Image, Radio, RadioGroup, Stack, Text, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, Hide } from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, Image, Radio, RadioGroup, Stack, Text, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, Hide, useToast } from '@chakra-ui/react'
+import axios from 'axios';
 import React from 'react';
 import { AiFillRightCircle } from 'react-icons/ai';
-import { useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Navigate, NavLink, useNavigate } from 'react-router-dom';
+import { createOrder } from '../../api/api';
+import { clearCart } from '../../Redux/Cart/action';
 export const Delivery = () => {
 
     const { totalAmount,totalOriginalAmount } = useSelector((state) => state.cart);
+    const toast = useToast();
+    const navigate  = useNavigate();
+    const dispatch = useDispatch();
+    const initPayment = (data) => {
+		const options = {
+			key: "rzp_test_qOdpyGDXfL2tdm",
+			amount: totalAmount * 100,
+			currency: 'INR',
+			name: 'PharmEasy Orders',
+			description: "Test Transaction",
+            order_id: data.id,
+			handler: async (response) => {
+				try {
+					const verifyUrl = "http://localhost:8080/api/payment/verify";
+					const { data } = await axios.post(verifyUrl, response);
+					createOrder().then(res=>dispatch(clearCart())).catch(err=>console.log(err)).finally(res=>{
+                        toast({
+                            title: "order Placed Successfully",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+            position: "top",
+                            
+                        })
+                        return navigate("/");
+                    })
+				} catch (error) {
+					console.log(error);
+				}
+			},
+			theme: {
+				color: "#3399cc",
+			},
+		};
+		const rzp1 = new window.Razorpay(options);
+		rzp1.open();
+	};
+    const handlePayment = async () => {
+		try {
+			const orderUrl = "http://localhost:8080/api/payment/orders";
+			const { data } = await axios.post(orderUrl, { amount: totalAmount });
+			console.log(data);
+			initPayment(data.data);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
   return (
     <Box display="flex" w={{base: "90%", sm:"90%", md:"90%", lg:"90%", xl:"70%"}} m="auto" justifyContent="space-between"  mt="30px" mb="30px" flexDirection={{base: "column", sm:"column", md:"column", lg:"column", xl:"row"}}>
@@ -46,7 +96,7 @@ export const Delivery = () => {
         </Box>
         {/* Right */}
         <Box w={{base: "90%", sm:"90%", md:"90%", lg:"90%", xl:"30%"}} mt={{base: "20px", sm:"20px", md:"20px", lg:"20px", xl:"1px"}} >
-           <NavLink to="/payment"> <Button w='100%' display="flex"  bg="#10847e" color="white" fontSize='xl' p="25px" _hover={{ border: "1px solid #159a94" }} ><Text mr="10px"> Proceed to Pay </Text> <AiFillRightCircle w="50px"/></Button></NavLink>
+            <Button onClick={handlePayment} w='100%' display="flex"  bg="#10847e" color="white" fontSize='xl' p="25px" _hover={{ border: "1px solid #159a94" }} ><Text mr="10px"> Proceed to Pay </Text> <AiFillRightCircle w="50px"/></Button>
             <Hide below='lg'>
                 <Box>
                     <Heading fontSize='xl' color="#889dad" p="10px" >Order Summary</Heading>
