@@ -10,6 +10,7 @@ import {
   Button,
   useDisclosure,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -18,23 +19,25 @@ import { clearCart } from "../../Redux/Cart/action";
 export function LogOut() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
-  // const [username, setusername] = useState('User')
+  const [username, setusername] = useState('User')
   const cancelRef = useRef();
   const navigate = useNavigate();
-  // const parseJwt = async (token) => {
-  //   try {
-  //     return JSON.parse(atob(token.split('.')[1]));
-  //   } catch (e) {
-  //     return null;
-  //   }
-  // };
-  // if (localStorage.getItem("token")) {
-  //   let token = localStorage.getItem("token");
-  //   parseJwt(token).then((data) => {
-  //     data.username ? setusername(data.username) : setusername(data.name)
-  //     console.log("jwt token decoded", data);
-  //   })
-  // }
+  const parseJwt = async (token) => {
+    try {
+      return JSON.parse(atob(token.split('.')[1]));
+    } catch (e) {
+      return null;
+    }
+  };
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      let token = localStorage.getItem("token");
+      parseJwt(token).then((data) => {
+        data.username ? setusername(data.username) : setusername(data.name);
+        console.log("jwt token decoded", data);
+      });
+    }
+  });
   const handleLogOut = () => {
     // console.log("LogOut Called");
     localStorage.clear();
@@ -49,7 +52,9 @@ export function LogOut() {
         bg={"transparent"}
         _hover={{ backgroundColor: "transparent", color: "teal" }}
         onClick={onOpen}
-      >User</Button>
+      >
+        {username}
+      </Button>
       <AlertDialog
         motionPreset="slideInBottom"
         leastDestructiveRef={cancelRef}
