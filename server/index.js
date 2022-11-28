@@ -5,6 +5,7 @@ const { productsRouter } = require('./routes/products.routes');
 const { cartRouter } = require('./routes/cart.routes');
 // const { orderRouter } = require('./routes/order.routes');
 const { userRouter } = require('./routes/user.routes');
+// app.use("/payment/", paymentRoutes);
 const { authMiddleware } = require('./middlewares/auth');
 const app = express();
 app.use(express.json());
