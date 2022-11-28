@@ -24,7 +24,9 @@ app.use("/products",productsRouter);
 
 
 
-
+app.get('/', ()=>{
+    res.send("Server Homepage")
+})
 
 
 
