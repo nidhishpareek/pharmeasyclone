@@ -113,7 +113,7 @@ async function githublogin(req, res) {
         name: userDetails.name,
         username: userDetails.login,
         image: userDetails.avatar_url,
-        email: userDetails.email,
+        email: userDetails.email || userDetails.login,
       });
     console.log('created user', existingUser);
 

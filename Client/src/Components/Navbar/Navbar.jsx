@@ -216,27 +216,29 @@ function Navbar() {
             </Box>
           </Link>
         )}
-        <Link className="hover_green">
+        {isAuth && 
+        <Link className="hover_green" to={"/orders"}>
           <Box display="flex" fontSize="14px">
             <Box display="flex" alignItems="center" mr="5px">
               <TbDiscount2  fontSize="20px" />
             </Box>
-            {windowWidth > 1104 && <Box mt="2px" fontWeight="600">Offers</Box>}
-            {windowWidth < 1024 && windowWidth > 650 && <Box mt="2px" fontWeight="600" >Offers</Box>}
+            {windowWidth > 1104 && <Box mt="2px" fontWeight="600">My Orders</Box>}
+            {windowWidth < 1024 && windowWidth > 650 && <Box mt="2px" fontWeight="600" >My Orders</Box>}
           </Box>
-        </Link>
+        </Link>}
+        {isAuth && 
         <Link className="hover_green" to={"/cart"}>
           <Box display="flex" fontSize="14px" pos={"relative"}>
-            <Box  display="flex" alignItems="center" mr="8px">
+            {<Box  display="flex" alignItems="center" mr="8px">
               <FiShoppingCart fontSize="20px"/>
              <Center border={"1px solid black"} color="white" fontSize={"10px"} borderRadius="50%" borderColor={"teal"} bg="teal" height={"16px"} top={"-10px"} left="10px"  pos={"absolute"} paddingX="5px">{isAuth ? totalCount : 0}</Center>
               
               
-            </Box>
+            </Box>}
             {windowWidth > 1104 && <Box mt="2px" fontWeight="600">Cart</Box>}
             {windowWidth < 1024 && windowWidth > 650 && <Box fontWeight="600" mt="2px">Cart</Box>}
           </Box>
-        </Link>
+        </Link>}
       </Flex>
 
       {/* left side menu DrawerContent */}
