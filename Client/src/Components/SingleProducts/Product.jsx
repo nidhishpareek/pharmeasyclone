@@ -55,19 +55,7 @@ function updateCart(amt){
         dispatch(addToCart({productId:data,quantity:amt}))
     }).catch(err=>console.log(err))  
 }
-function update(id,amount){
-    const body = {
-        amount
-    }
-    fetch(`https://pharmeasy-server1234.herokuapp.com/Cart/${id}`,{
-        method:"PATCH",
-        body:JSON.stringify(body),
-        headers:{"content-type": "application/json"}
-    }).then((res)=>res.json()).then(res=>{
-        dispatch(updateCart(id,amount))
-    }).catch((err)=>console.log(err))
-    
-}
+
 function removeItem(id){
         
     fetch(`https://pharmeasy-server1234.herokuapp.com/Cart/${id}`,{

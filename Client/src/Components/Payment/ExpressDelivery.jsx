@@ -22,7 +22,7 @@ export const Delivery = () => {
             order_id: data.id,
 			handler: async (response) => {
 				try {
-					const verifyUrl = "http://localhost:8080/api/payment/verify";
+					const verifyUrl = "https://pharmeasyclone.onrender.com/api/payment/verify";
 					const { data } = await axios.post(verifyUrl, response);
 					createOrder().then(res=>dispatch(clearCart())).catch(err=>console.log(err)).finally(res=>{
                         toast({
@@ -48,7 +48,7 @@ export const Delivery = () => {
 	};
     const handlePayment = async () => {
 		try {
-			const orderUrl = "http://localhost:8080/api/payment/orders";
+			const orderUrl = "https://pharmeasyclone.onrender.com/api/payment/orders";
 			const { data } = await axios.post(orderUrl, { amount: totalAmount });
 			console.log(data);
 			initPayment(data.data);
