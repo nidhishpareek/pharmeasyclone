@@ -98,3 +98,4 @@ module.exports = {
   removeItemFromCart,
   updateCartItem
 };
+// backend of cart
