@@ -1,4 +1,13 @@
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import {
+  Box,
+  CircularProgress,
+  Flex,
+  Image,
+  Skeleton,
+  Spinner,
+  Text,
+  Wrap,
+} from "@chakra-ui/react";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -88,7 +97,7 @@ function CategoryCraousal() {
     setLoading(true);
     getAllCategories()
       .then((res) => {
-        setCategories(res.data.totalCategories)
+        setCategories(res.data.totalCategories);
       })
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
@@ -97,6 +106,20 @@ function CategoryCraousal() {
   useEffect(() => {
     getCategories();
   }, []);
+
+  if (loading)
+    return (
+      <Wrap margin={"0 auto"} justify="space-between" width={"90%"} gap="20px">
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((el) => (
+          <Skeleton color="green.300">
+            <Box
+              width={{ base: "100px", sm: "140px", lg: "180px" }}
+              height="220px"
+            ></Box>
+          </Skeleton>
+        ))}
+      </Wrap>
+    );
 
   return (
     <Box
@@ -135,7 +158,7 @@ function CategoryCraousal() {
                   border="1px solid rgba(0,0,0,0.2)"
                   borderRadius={"10px"}
                   mb="10px"
-                  src={`https://raw.githubusercontent.com/nidhishpareek/pharmeasyclone/mergetesting/Client/public/images/${tab}.webp`}
+                  src={require(`./../../../public/images/${tab}.webp`)}
                 ></Image>
 
                 <Text

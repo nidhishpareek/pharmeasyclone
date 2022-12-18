@@ -1,4 +1,4 @@
-import { HStack, Image, Text, Wrap } from "@chakra-ui/react";
+import { Box, HStack, Image, Skeleton, Text, Wrap } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getAllCategories } from "../../api/api";
@@ -20,6 +20,20 @@ function Cards() {
   useEffect(() => {
     getCategories();
   }, []);
+  
+  if (loading)
+    return (
+      <Wrap margin={"0 auto"} justify="space-between"  gap="20px">
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((el) => (
+          <Skeleton color="green.300">
+            <Box
+              w={{ base: "305px", sm: "350px", lg: "350px", xl: "370px" }}
+              height="100px"
+            ></Box>
+          </Skeleton>
+        ))}
+      </Wrap>
+    );
 
   return (
     <Wrap
@@ -38,7 +52,7 @@ function Cards() {
             padding={"10px"}
             _hover={{ boxShadow: "0 0 5px 2px #16876e", border: "transparant" }}
           >
-            <Image w={"100px"} src={`https://raw.githubusercontent.com/nidhishpareek/pharmeasyclone/mergetesting/Client/public/images/${tab}.webp`}></Image>
+            <Image w={"100px"} src={require(`./../../../public/images/${tab}.webp`)}></Image>
             <Text>{tab} </Text>
           </HStack>
         </Link>
