@@ -1,3 +1,2 @@
 # pharmeasyclone
-This project is an MERN full stack clone app of pharmeasy website, which is a ecommerce pharmacy store.
 This project is a MERN Full Stack Project to develop a clone of pharmeasy.in, an ecommerce website. We created the fully responsive pixel perfect UI and built front end with React, redux and Chakra UI. We created backend  with node js, express js, mongoDB. The signin is made with Git OAuth and conventional email-password pair. To authenticate each request we used json web token (JWT) and stored it in local storage. We used razor pay test versionto authenticate the payment gateway, which simulates the actual payment successfull.
